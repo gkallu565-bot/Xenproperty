@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List Your Property For Free | XenProperty</title>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="XenProperty - Where Dreams Your Home..." class="brand-logo-img">
+      </a>
+      <ul class="nav-links">
+        <li><a href="buy.html" class="nav-link">Buy</a></li>
+        <li><a href="rent.html" class="nav-link">Rent</a></li>
+        <li><a href="sell.html" class="nav-link active">Sell</a></li>
+        <li><a href="design.html" class="nav-link">Design</a></li>
+        <li><a href="house-plans.html" class="nav-link">House Plans</a></li>
+        <li><a href="loans.html" class="nav-link">Home Loans</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+      </ul>
+      <div class="nav-actions" id="navbarAuthArea">
+        <a href="login.html" class="btn-auth-login">Login</a>
+      </div>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- MINI HERO -->
+  <div class="page-hero-mini" style="background: linear-gradient(135deg, #0b3b2e 0%, #166534 100%);">
+    <div class="container">
+      <span style="font-size:0.75rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:999px;">
+        <i class="fa-solid fa-bolt"></i> FASTEST BUYER & TENANT MATCHES
+      </span>
+      <h1 style="margin-top:12px;">List Your Property in Minutes</h1>
+      <p>Showcase your property to over 500,000 monthly verified buyers and tenants across India with AI valuation matching.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="sell-form-card">
+      <h2 style="font-size:1.5rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">Property Submission Wizard</h2>
+      <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:28px;">Fill in the details below to publish your listing directly into the XenProperty database.</p>
+
+      <form id="listPropertyForm" enctype="multipart/form-data">
+        <!-- 1. Purpose & Property Type -->
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Listing Purpose *</label>
+            <select name="listing_type" required class="form-control" aria-label="Listing type">
+              <option value="buy">Sell Property (For Sale)</option>
+              <option value="rent">Rent Out Property (For Rent)</option>
+              <option value="commercial">Commercial Lease / Sale</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Property Sub-Category *</label>
+            <select name="property_type" required class="form-control" aria-label="Property type">
+              <option value="Villa">Villa / Bungalow</option>
+              <option value="Apartment">Apartment / High-rise Flat</option>
+              <option value="Penthouse">Luxury Penthouse</option>
+              <option value="Studio">Studio Apartment</option>
+              <option value="Plot">Residential Plot / Land</option>
+              <option value="Commercial Space">Office / Commercial Space</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2. Title & Price -->
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Property Title *</label>
+            <input type="text" name="title" placeholder="e.g. Palm Grove Luxury Villa" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Expected Price (â‚¹ in INR) *</label>
+            <input type="number" name="price" placeholder="e.g. 12500000 (1.25 Cr) or 45000 (for rent)" required class="form-control" aria-label="Price">
+          </div>
+        </div>
+
+        <!-- 3. City, State & Address -->
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>City *</label>
+            <select name="city" required class="form-control" aria-label="City">
+              <option value="Bangalore">Bangalore</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Pune">Pune</option>
+              <option value="Gurgaon">Gurgaon</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Kochi">Kochi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>State *</label>
+            <input type="text" name="state" placeholder="e.g. Karnataka" required class="form-control" value="Karnataka">
+          </div>
+          <div class="form-group">
+            <label>Local Area / Locality *</label>
+            <input type="text" name="address" placeholder="e.g. Sarjapur Road" required class="form-control">
+          </div>
+        </div>
+
+        <!-- 4. Specifications -->
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Bedrooms (BHK)</label>
+            <input type="number" name="beds" min="0" max="20" value="3" class="form-control" aria-label="Number of bedrooms">
+          </div>
+          <div class="form-group">
+            <label>Bathrooms</label>
+            <input type="number" name="baths" min="0" max="20" value="3" class="form-control" aria-label="Number of bathrooms">
+          </div>
+          <div class="form-group">
+            <label>Super Built-up Area (sq.ft) *</label>
+            <input type="number" name="area_sqft" placeholder="e.g. 1850" required class="form-control" value="1850">
+          </div>
+        </div>
+        <!-- 5. Furnishing & Image -->
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Furnishing Status</label>
+            <select name="furnishing" class="form-control" aria-label="Furnishing status">
+              <option value="Semi-Furnished">Semi-Furnished</option>
+              <option value="Fully Furnished">Fully Furnished</option>
+              <option value="Unfurnished">Unfurnished</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Property Photo (Upload File or URL)</label>
+            <input type="file" name="image" id="propImageFile" accept="image/*" class="form-control" style="margin-bottom:6px;" aria-label="Upload property photo">
+            <input type="url" name="image_url" id="propImageUrl" placeholder="Or paste image URL (Unsplash, etc.)" class="form-control">
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <img id="imagePreview" src="" alt="Preview" style="display:none; max-height:180px; border-radius:10px; border:1px solid #d1ded8; margin-top:8px;">
+        </div>
+
+        <!-- 6. Key Amenities -->
+        <div class="form-group">
+          <label>Select Amenities Available</label>
+          <div class="amenity-checkboxes">
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="Swimming Pool" checked> Swimming Pool</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="Clubhouse & Gym" checked> Clubhouse & Gym</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="24x7 Security" checked> 24x7 Security</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="Vastu Compliant" checked> Vastu Compliant</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="Covered Car Parking" checked> Covered Car Parking</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="Power Backup" checked> 100% Power Backup</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="Private Garden"> Private Garden</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="EV Charger Station"> EV Charger Station</label>
+            <label class="amenity-label"><input type="checkbox" name="amenities_check" value="Modular Kitchen"> Modular Kitchen</label>
+          </div>
+        </div>
+
+        <!-- 7. Description -->
+        <div class="form-group">
+          <label>Detailed Description *</label>
+          <textarea name="description" rows="4" placeholder="Highlight key architecture, sun orientation, view, neighborhood, proximity to metro, etc." required class="form-control"></textarea>
+        </div>
+
+        <button type="submit" id="submitPropBtn" class="btn-submit-primary" style="font-size:1.05rem; padding:14px;">
+          Publish Property Listing <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 XenProperty Technologies India Pvt. Ltd. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/matcher.js"></script>
+
+  <script src="js/demo-store.js"></script>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/sell.js"></script>
+</body>
+</html>

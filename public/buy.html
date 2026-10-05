@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy Properties in India - Villas, Apartments & Luxury Homes | XenProperty</title>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="XenProperty - Where Dreams Your Home..." class="brand-logo-img">
+      </a>
+      <ul class="nav-links">
+        <li><a href="buy.html" class="nav-link active">Buy</a></li>
+        <li><a href="rent.html" class="nav-link">Rent</a></li>
+        <li><a href="sell.html" class="nav-link">Sell</a></li>
+        <li><a href="design.html" class="nav-link">Design</a></li>
+        <li><a href="house-plans.html" class="nav-link">House Plans</a></li>
+        <li><a href="loans.html" class="nav-link">Home Loans</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+      </ul>
+      <div class="nav-actions" id="navbarAuthArea">
+        <a href="login.html" class="btn-auth-login">Login</a>
+        <a href="login.html?tab=signup" class="btn-auth-signup">Sign Up</a>
+        <a href="sell.html" class="btn-list-prop"><i class="fa-solid fa-plus"></i> List Property</a>
+      </div>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- MINI HERO BANNER -->
+  <div class="page-hero-mini">
+    <div class="container">
+      <span style="font-size:0.75rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:999px;">
+        <i class="fa-solid fa-shield-check"></i> 100% RERA VERIFIED PROPERTIES
+      </span>
+      <h1 style="margin-top:12px;">Discover Properties for Sale</h1>
+      <p>Browse luxury villas, penthouses, modern apartments, and premium investment plots verified by XenProperty AI.</p>
+    </div>
+  </div>
+
+  <!-- MARKETPLACE SECTION -->
+  <main class="container">
+    <div class="marketplace-layout">
+      <!-- FILTER SIDEBAR -->
+      <aside class="filter-sidebar">
+        <h3>
+          <span><i class="fa-solid fa-sliders" style="color:var(--primary); margin-right:6px;"></i> Filters</span>
+          <button onclick="resetFilters()" style="background:none; border:none; font-size:0.78rem; color:var(--primary); cursor:pointer; font-weight:700;">Reset</button>
+        </h3>
+
+        <!-- Search by Keyword -->
+        <div class="filter-section">
+          <label>Search Keyword</label>
+          <input type="text" id="filterSearch" placeholder="Location, project name..." class="form-control" style="padding:8px 12px; font-size:0.85rem;">
+        </div>
+
+        <!-- City Dropdown -->
+        <div class="filter-section">
+          <label>City / Location</label>
+          <select id="filterCity" class="form-control" style="padding:8px 12px; font-size:0.85rem;" aria-label="Filter by city">
+            <option value="all">All Cities</option>
+            <option value="Bangalore">Bangalore, Karnataka</option>
+            <option value="Mumbai">Mumbai, Maharashtra</option>
+            <option value="Hyderabad">Hyderabad, Telangana</option>
+            <option value="Pune">Pune, Maharashtra</option>
+            <option value="Gurgaon">Gurgaon, NCR</option>
+          </select>
+        </div>
+
+        <!-- Property Type -->
+        <div class="filter-section">
+          <label>Property Type</label>
+          <select id="filterPropType" class="form-control" style="padding:8px 12px; font-size:0.85rem;" aria-label="Filter by property type">
+            <option value="all">All Types</option>
+            <option value="Villa">Villa / Independent House</option>
+            <option value="Apartment">Apartment / Flat</option>
+            <option value="Penthouse">Sky Penthouse</option>
+            <option value="Commercial Space">Commercial Hub</option>
+          </select>
+        </div>
+
+        <!-- Bedrooms (BHK) -->
+        <div class="filter-section">
+          <label>Bedrooms (BHK)</label>
+          <div class="filter-chips-row">
+            <button type="button" class="filter-chip bhk-chip" data-beds="1">1 BHK</button>
+            <button type="button" class="filter-chip bhk-chip" data-beds="2">2 BHK</button>
+            <button type="button" class="filter-chip bhk-chip" data-beds="3">3 BHK</button>
+            <button type="button" class="filter-chip bhk-chip" data-beds="4">4+ BHK</button>
+          </div>
+        </div>
+
+        <!-- Budget Presets -->
+        <div class="filter-section">
+          <label>Budget Range</label>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <button type="button" class="filter-chip price-preset" data-min="0" data-max="5000000">Under â‚¹50 Lakh</button>
+            <button type="button" class="filter-chip price-preset" data-min="5000000" data-max="10000000">â‚¹50 Lakh - â‚¹1 Cr</button>
+            <button type="button" class="filter-chip price-preset" data-min="10000000" data-max="20000000">â‚¹1 Cr - â‚¹2 Cr</button>
+            <button type="button" class="filter-chip price-preset" data-min="20000000" data-max="1000000000">â‚¹2 Cr+</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- PROPERTIES CONTENT AREA -->
+      <section>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#ffffff; padding:14px 20px; border-radius:var(--radius-lg); border:1px solid #e5ebe7;">
+          <strong id="propertyResultsCount" style="color:var(--text-main); font-size:0.95rem;">Loading properties...</strong>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <label style="font-size:0.82rem; font-weight:700; color:var(--text-muted);">Sort By:</label>
+            <select id="sortSelect" class="form-control" style="width:auto; padding:6px 12px; font-size:0.82rem;" aria-label="Sort properties">
+              <option value="is_featured">Featured & Recommended</option>
+              <option value="ai_match">Highest AI Match %</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="location">Best Location Score</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- DYNAMIC PROPERTIES GRID -->
+        <div class="properties-grid" id="propertiesGrid">
+          <!-- Populated by properties.js -->
+        </div>
+      </section>
+    </div>
+  </main>
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="background:#ffffff; padding:6px 14px; border-radius:10px; display:inline-block; margin-bottom:12px;">
+            <img src="images/logo.png" alt="XenProperty" style="height:48px; display:block;">
+          </div>
+          <p>Where Dreams Your Home... India's premier AI-powered real estate and architecture ecosystem.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Marketplace</h4>
+          <ul class="footer-links">
+            <li><a href="buy.html">Buy Homes</a></li>
+            <li><a href="rent.html">Rent Homes</a></li>
+            <li><a href="sell.html">Post Free Ad</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="design.html">Interior Design</a></li>
+            <li><a href="house-plans.html">House Plans</a></li>
+            <li><a href="loans.html">Home Loans</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="admin.html">Admin Portal</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <p style="font-size:0.85rem; color:#9cb1a8;">24/7 Concierge: 1800-419-8899<br>Email: support@xenproperty.com</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 XenProperty Technologies India Pvt. Ltd. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/matcher.js"></script>
+
+  <script src="js/demo-store.js"></script>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/properties.js"></script>
+</body>
+</html>

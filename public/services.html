@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Estate Ecosystem Services | XenProperty</title>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="XenProperty - Where Dreams Your Home..." class="brand-logo-img">
+      </a>
+      <ul class="nav-links">
+        <li><a href="buy.html" class="nav-link">Buy</a></li>
+        <li><a href="rent.html" class="nav-link">Rent</a></li>
+        <li><a href="sell.html" class="nav-link">Sell</a></li>
+        <li><a href="design.html" class="nav-link">Design</a></li>
+        <li><a href="house-plans.html" class="nav-link">House Plans</a></li>
+        <li><a href="loans.html" class="nav-link">Home Loans</a></li>
+        <li><a href="services.html" class="nav-link active">Services</a></li>
+      </ul>
+      <div class="nav-actions" id="navbarAuthArea">
+        <a href="login.html" class="btn-auth-login">Login</a>
+      </div>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- MINI HERO -->
+  <div class="page-hero-mini" style="background: linear-gradient(135deg, #0f5b46 0%, #1e293b 100%);">
+    <div class="container">
+      <span style="font-size:0.75rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:999px;">
+        <i class="fa-solid fa-shield-halved"></i> END-TO-END ASSISTANCE
+      </span>
+      <h1 style="margin-top:12px;">Verified Ecosystem Services</h1>
+      <p>From 40-point legal title searches to turnkey moving and scientific Vastu analysis, we safeguard every rupee of your property investment.</p>
+    </div>
+  </div>
+
+  <main class="container" style="margin-bottom:60px;">
+    <div class="properties-grid" style="grid-template-columns: repeat(3, 1fr); gap:26px;">
+      <!-- 1. Legal Verification -->
+      <div class="marketplace-card" style="padding:28px;">
+        <div class="action-icon green" style="width:52px; height:52px; font-size:1.5rem; margin-bottom:18px;">
+          <i class="fa-solid fa-scale-balanced"></i>
+        </div>
+        <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">Legal Title Verification</h3>
+        <p style="font-size:0.85rem; color:#6b7280; line-height:1.5; margin-bottom:18px;">
+          Complete 30-year mother deed audit, encumbrance check, RERA compliance validation, and litigation clearance by High Court certified property advocates.
+        </p>
+        <button class="btn-hero-primary" style="padding:8px 18px; font-size:0.82rem;" onclick="bookService('Legal Title Verification')">
+          Book Legal Check <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
+        </button>
+      </div>
+
+      <!-- 2. Property Valuation -->
+      <div class="marketplace-card" style="padding:28px;">
+        <div class="action-icon blue" style="width:52px; height:52px; font-size:1.5rem; margin-bottom:18px;">
+          <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">AI Property Valuation</h3>
+        <p style="font-size:0.85rem; color:#6b7280; line-height:1.5; margin-bottom:18px;">
+          Data-driven market appraisal comparing 100,000+ registered registry transactions, government circle rates, and neighborhood price trajectory algorithms.
+        </p>
+        <button class="btn-hero-primary" style="padding:8px 18px; font-size:0.82rem;" onclick="bookService('AI Property Valuation')">
+          Get Valuation Report <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
+        </button>
+      </div>
+
+      <!-- 3. Home Inspection -->
+      <div class="marketplace-card" style="padding:28px;">
+        <div class="action-icon orange" style="width:52px; height:52px; font-size:1.5rem; margin-bottom:18px;">
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+        </div>
+        <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">Home Inspection & Snagging</h3>
+        <p style="font-size:0.85rem; color:#6b7280; line-height:1.5; margin-bottom:18px;">
+          120+ checkpoint engineering inspection: thermal imaging for moisture seepage, electrical load testing, plumbing audits, and wall plumbness reports.
+        </p>
+        <button class="btn-hero-primary" style="padding:8px 18px; font-size:0.82rem;" onclick="bookService('Home Inspection & Snagging')">
+          Schedule Inspection <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
+        </button>
+      </div>
+
+      <!-- 4. Vastu Consultation -->
+      <div class="marketplace-card" style="padding:28px;">
+        <div class="action-icon purple" style="width:52px; height:52px; font-size:1.5rem; margin-bottom:18px;">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+        <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">Scientific Vastu Audit</h3>
+        <p style="font-size:0.85rem; color:#6b7280; line-height:1.5; margin-bottom:18px;">
+          Non-destructive Vedic and geophysical corrections for Brahmasthan harmony, master bedroom orientation, and energy balance before moving in.
+        </p>
+        <button class="btn-hero-primary" style="padding:8px 18px; font-size:0.82rem;" onclick="bookService('Scientific Vastu Audit')">
+          Consult Vastu Expert <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
+        </button>
+      </div>
+
+      <!-- 5. Packers & Movers -->
+      <div class="marketplace-card" style="padding:28px;">
+        <div class="action-icon cyan" style="width:52px; height:52px; font-size:1.5rem; margin-bottom:18px;">
+          <i class="fa-solid fa-truck-ramp-box"></i>
+        </div>
+        <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">Verified Packers & Movers</h3>
+        <p style="font-size:0.85rem; color:#6b7280; line-height:1.5; margin-bottom:18px;">
+          5-layer safety packaging, dedicated closed container trucks, free transit insurance up to â‚¹10 Lakh, and zero-damage unpacking guarantee.
+        </p>
+        <button class="btn-hero-primary" style="padding:8px 18px; font-size:0.82rem;" onclick="bookService('Packers & Movers')">
+          Get Instant Quote <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
+        </button>
+      </div>
+
+      <!-- 6. Property Management & Escrow -->
+      <div class="marketplace-card" style="padding:28px;">
+        <div class="action-icon emerald" style="width:52px; height:52px; font-size:1.5rem; margin-bottom:18px;">
+          <i class="fa-solid fa-key"></i>
+        </div>
+        <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">Rental Property Management</h3>
+        <p style="font-size:0.85rem; color:#6b7280; line-height:1.5; margin-bottom:18px;">
+          Ideal for NRI owners. Guaranteed on-time monthly rent remittance, police verification of tenants, periodic video inspections, and maintenance handling.
+        </p>
+        <button class="btn-hero-primary" style="padding:8px 18px; font-size:0.82rem;" onclick="bookService('Rental Property Management')">
+          Hire Property Manager <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 XenProperty Technologies India Pvt. Ltd. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/matcher.js"></script>
+
+  <script src="js/demo-store.js"></script>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function bookService(serviceName) {
+      showToast(`Booking initiated for "${serviceName}". Our specialist will contact you in 15 mins.`, 'success');
+    }
+  </script>
+</body>
+</html>

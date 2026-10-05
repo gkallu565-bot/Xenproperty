@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XenProperty - Where Dreams Your Home | AI Real Estate</title>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="XenProperty - Where Dreams Your Home..." class="brand-logo-img">
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="buy.html" class="nav-link">Buy</a></li>
+        <li><a href="rent.html" class="nav-link">Rent</a></li>
+        <li><a href="sell.html" class="nav-link">Sell</a></li>
+        <li><a href="design.html" class="nav-link">Design</a></li>
+        <li><a href="house-plans.html" class="nav-link">House Plans</a></li>
+        <li><a href="loans.html" class="nav-link">Home Loans</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+      </ul>
+      <div class="nav-actions" id="navbarAuthArea">
+        <a href="login.html" class="btn-auth-login">Login</a>
+        <a href="login.html?tab=signup" class="btn-auth-signup">Sign Up</a>
+        <a href="sell.html" class="btn-list-prop">
+          <i class="fa-solid fa-plus"></i> List Property
+        </a>
+      </div>
+
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-banner">
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+          <div class="hero-badge">
+            <i class="fa-solid fa-sparkles"></i> INDIA'S PREMIER AI-POWERED REAL ESTATE ECOSYSTEM
+          </div>
+          <h1 class="hero-title">Where Property Meets Possibility.</h1>
+          <p class="hero-subtitle">
+            Find your property, design your home, plan your space and explore financing â€” all through XenProperty.
+          </p>
+          <div class="hero-ctas">
+            <a href="buy.html" class="btn-hero-primary">
+              Explore Properties <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="sell.html" class="btn-hero-secondary">
+              List Your Property
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO SEARCH FILTER FLOATING CARD -->
+      <div class="hero-search-wrapper">
+        <div class="search-card-container">
+          <div class="search-tabs">
+            <button type="button" class="search-tab-btn active" data-tab="buy">Buy</button>
+            <button type="button" class="search-tab-btn" data-tab="rent">Rent</button>
+            <button type="button" class="search-tab-btn" data-tab="commercial">Commercial</button>
+          </div>
+
+          <form id="homeSearchForm" class="search-form-grid">
+            <div class="search-input-group">
+              <i class="fa-solid fa-location-dot input-icon"></i>
+              <div class="input-fields">
+                <label>Location</label>
+                <select id="heroLocation" aria-label="Search location">
+                  <option value="all">Select location</option>
+                  <option value="Bangalore">Bangalore, Karnataka</option>
+                  <option value="Mumbai">Mumbai, Maharashtra</option>
+                  <option value="Hyderabad">Hyderabad, Telangana</option>
+                  <option value="Pune">Pune, Maharashtra</option>
+                  <option value="Gurgaon">Gurgaon, NCR</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="search-input-group">
+              <i class="fa-solid fa-house-chimney input-icon"></i>
+              <div class="input-fields">
+                <label>Property Type</label>
+                <select id="heroPropType" aria-label="Filter by property type">
+                  <option value="all">Any type</option>
+                  <option value="Villa">Modern Villa</option>
+                  <option value="Apartment">Luxury Apartment</option>
+                  <option value="Penthouse">Sky Penthouse</option>
+                  <option value="Commercial Space">Commercial Space</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="search-input-group">
+              <i class="fa-solid fa-indian-rupee-sign input-icon"></i>
+              <div class="input-fields">
+                <label>Budget</label>
+                <select id="heroBudget" aria-label="Filter by budget">
+                  <option value="all">Select budget</option>
+                  <option value="0-5000000">Under â‚¹50 Lakh</option>
+                  <option value="5000000-10000000">â‚¹50 Lakh - â‚¹1 Cr</option>
+                  <option value="10000000-25000000">â‚¹1 Cr - â‚¹2.5 Cr</option>
+                  <option value="25000000-1000000000">â‚¹2.5 Cr+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-search-main">
+              <i class="fa-solid fa-magnifying-glass"></i> Search Property
+            </button>
+
+            <button type="button" class="btn-ask-ai" onclick="triggerAskAIFocus()">
+              <i class="fa-solid fa-sparkles" style="color:var(--primary);"></i> Ask AI
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- QUICK ACTION CARDS (6 TILES) -->
+  <section class="quick-actions-section">
+    <div class="container">
+      <div class="quick-actions-grid">
+        <!-- 1. Buy -->
+        <a href="buy.html" class="quick-action-card">
+          <div class="action-card-header">
+            <div class="action-icon green"><i class="fa-solid fa-house-chimney"></i></div>
+            <div class="action-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+          <div class="action-card-body">
+            <h3>Buy Property</h3>
+            <p>Find the right property.</p>
+          </div>
+        </a>
+
+        <!-- 2. Rent -->
+        <a href="rent.html" class="quick-action-card">
+          <div class="action-card-header">
+            <div class="action-icon blue"><i class="fa-solid fa-key"></i></div>
+            <div class="action-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+          <div class="action-card-body">
+            <h3>Rent Property</h3>
+            <p>Discover your next home.</p>
+          </div>
+        </a>
+
+        <!-- 3. Sell -->
+        <a href="sell.html" class="quick-action-card">
+          <div class="action-card-header">
+            <div class="action-icon orange"><i class="fa-solid fa-tag"></i></div>
+            <div class="action-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+          <div class="action-card-body">
+            <h3>Sell Property</h3>
+            <p>List and showcase your property.</p>
+          </div>
+        </a>
+
+        <!-- 4. Interior Design -->
+        <a href="design.html" class="quick-action-card">
+          <div class="action-card-header">
+            <div class="action-icon purple"><i class="fa-solid fa-compass-drafting"></i></div>
+            <div class="action-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+          <div class="action-card-body">
+            <h3>Interior Design</h3>
+            <p>Transform your space.</p>
+          </div>
+        </a>
+
+        <!-- 5. House Plans -->
+        <a href="house-plans.html" class="quick-action-card">
+          <div class="action-card-header">
+            <div class="action-icon cyan"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="action-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+          <div class="action-card-body">
+            <h3>House Plans</h3>
+            <p>Plan your dream home.</p>
+          </div>
+        </a>
+
+        <!-- 6. Home Loans -->
+        <a href="loans.html" class="quick-action-card">
+          <div class="action-card-header">
+            <div class="action-icon emerald"><i class="fa-solid fa-wallet"></i></div>
+            <div class="action-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+          <div class="action-card-body">
+            <h3>Home Loans</h3>
+            <p>Explore financing assistance.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROPERTIES ("PROPERTIES WORTH DISCOVERING") -->
+  <section class="featured-properties-section" style="padding: 30px 0 50px 0;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span style="font-size:0.75rem; font-weight:800; color:var(--primary); letter-spacing:0.8px; text-transform:uppercase;">FEATURED PROPERTIES</span>
+          <h2>Properties Worth Discovering.</h2>
+          <p>Explore carefully presented properties from across the market.</p>
+        </div>
+        <a href="buy.html" class="view-all-link">
+          View All Properties <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="featured-properties-layout">
+        <!-- Large Featured Hero Property (The Green Residency) -->
+        <div class="hero-property-card" id="featuredHeroCard">
+          <!-- Loaded dynamically by home.js with instant fallback -->
+          <div class="prop-badge-row">
+            <span class="badge-verified"><i class="fa-solid fa-circle-check"></i> Verified</span>
+            <div class="badge-favorite"><i class="fa-regular fa-heart"></i></div>
+          </div>
+          <div class="hero-prop-info">
+            <h3>The Green Residency</h3>
+            <p class="hero-prop-location">Sarjapur Main Road, Bangalore, Karnataka</p>
+            <div class="hero-prop-price-specs">
+              <div class="hero-prop-price">â‚¹1.25 Cr</div>
+              <div class="hero-prop-specs">
+                <span><i class="fa-solid fa-bed"></i> 3 Beds</span>
+                <span><i class="fa-solid fa-bath"></i> 3 Baths</span>
+                <span><i class="fa-solid fa-vector-square"></i> 1,850 sq.ft.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stacked Side Properties (Skyline Apartments & Royal Villa) -->
+        <div class="side-properties-stack" id="featuredSideStack">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI ASSISTANT ("A SMARTER WAY TO FIND PROPERTY") -->
+  <section class="ai-assistant-section" id="aiAssistantSection">
+    <div class="container">
+      <div class="ai-assistant-box">
+        <div class="ai-assistant-header">
+          <div class="ai-title-wrap">
+            <h2>A Smarter Way to Find Property.</h2>
+            <p>Tell us what you're looking for, and our AI will find the best matches for you.</p>
+          </div>
+          <div class="ai-match-badge-pill">
+            <i class="fa-solid fa-sparkles"></i> 94% AI Match Engine Active
+          </div>
+        </div>
+
+        <div class="ai-assistant-content-grid">
+          <!-- Left: Conversational Interactive Chat Window -->
+          <div class="ai-chat-window">
+            <div class="chat-messages-scroll" id="aiChatMessages">
+              <div class="chat-bubble user">
+                <div class="chat-avatar"><i class="fa-solid fa-user"></i></div>
+                <div class="chat-text">Find me a modern 3-bedroom home in a peaceful area within my budget.</div>
+              </div>
+              <div class="chat-bubble ai">
+                <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="chat-text">Here are verified properties that closely match your lifestyle, location, and budget criteria:</div>
+              </div>
+            </div>
+
+            <form class="chat-input-bar" id="aiChatForm">
+              <input type="text" id="aiChatInput" placeholder="Type your message, e.g., 3 BHK villa in Bangalore under 2 Cr..." autocomplete="off">
+              <button type="submit" class="chat-send-btn" aria-label="Send message">
+                <i class="fa-solid fa-arrow-up"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Right: Live AI Recommended Cards -->
+          <div class="ai-matches-panel">
+            <h4>
+              <span>Top Matches for You</span>
+              <span style="font-size:0.8rem; color:var(--primary); font-weight:700;"><i class="fa-solid fa-wand-magic-sparkles"></i> High Accuracy</span>
+            </h4>
+            <div class="ai-matches-cards-row" id="aiMatchesGrid">
+              <!-- Default Match 1: Green Valley -->
+              <div class="ai-prop-card" onclick="viewPropertyDetails(4)">
+                <div class="ai-prop-thumb" style="background-image: url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80');">
+                  <span style="position:absolute; top:6px; left:6px; background:rgba(15,91,70,0.9); color:#fff; font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:999px;">92% Match</span>
+                </div>
+                <div class="ai-prop-details">
+                  <h5>Green Valley</h5>
+                  <div class="ai-prop-price-tag">â‚¹95 Lakh</div>
+                  <div class="ai-score-bars">
+                    <div class="score-bar-row">
+                      <span>Location</span>
+                      <strong>92%</strong>
+                    </div>
+                    <div class="score-bar-row">
+                      <span>Lifestyle</span>
+                      <strong>90%</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Default Match 2: The Grand Villa -->
+              <div class="ai-prop-card" onclick="viewPropertyDetails(5)">
+                <div class="ai-prop-thumb" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80');">
+                  <span style="position:absolute; top:6px; left:6px; background:rgba(15,91,70,0.9); color:#fff; font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:999px;">90% Match</span>
+                </div>
+                <div class="ai-prop-details">
+                  <h5>The Grand Villa</h5>
+                  <div class="ai-prop-price-tag">â‚¹1.8 Cr</div>
+                  <div class="ai-score-bars">
+                    <div class="score-bar-row">
+                      <span>Location</span>
+                      <strong>90%</strong>
+                    </div>
+                    <div class="score-bar-row">
+                      <span>Lifestyle</span>
+                      <strong>93%</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Default Match 3: Lake View Residency -->
+              <div class="ai-prop-card" onclick="viewPropertyDetails(6)">
+                <div class="ai-prop-thumb" style="background-image: url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=600&q=80');">
+                  <span style="position:absolute; top:6px; left:6px; background:rgba(15,91,70,0.9); color:#fff; font-size:0.65rem; font-weight:800; padding:2px 8px; border-radius:999px;">88% Match</span>
+                </div>
+                <div class="ai-prop-details">
+                  <h5>Lake View Residency</h5>
+                  <div class="ai-prop-price-tag">â‚¹1.75 Cr</div>
+                  <div class="ai-score-bars">
+                    <div class="score-bar-row">
+                      <span>Location</span>
+                      <strong>88%</strong>
+                    </div>
+                    <div class="score-bar-row">
+                      <span>Lifestyle</span>
+                      <strong>91%</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- YOUR PROPERTY JOURNEY TIMELINE -->
+  <section class="property-journey-section">
+    <div class="container">
+      <div class="journey-wrapper">
+        <div>
+          <div style="margin-bottom: 20px;">
+            <span style="font-size:0.75rem; font-weight:800; color:var(--primary); letter-spacing:0.8px; text-transform:uppercase;">YOUR PROPERTY JOURNEY</span>
+            <h3 style="font-size:1.35rem; font-weight:800; color:var(--text-main);">From finding to financing â€” we're with you at every step.</h3>
+          </div>
+
+          <div class="journey-steps-track">
+            <!-- 01 -->
+            <div class="journey-step-item active">
+              <div class="step-circle"><i class="fa-solid fa-compass"></i></div>
+              <div class="step-info">
+                <span>01</span>
+                <h4>Discover</h4>
+                <p>Explore your options.</p>
+              </div>
+            </div>
+            <div class="step-connector-line"></div>
+
+            <!-- 02 -->
+            <div class="journey-step-item">
+              <div class="step-circle"><i class="fa-solid fa-key"></i></div>
+              <div class="step-info">
+                <span>02</span>
+                <h4>Buy / Rent</h4>
+                <p>Secure your home.</p>
+              </div>
+            </div>
+            <div class="step-connector-line"></div>
+
+            <!-- 03 -->
+            <div class="journey-step-item">
+              <div class="step-circle"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div class="step-info">
+                <span>03</span>
+                <h4>Design</h4>
+                <p>Make it yours.</p>
+              </div>
+            </div>
+            <div class="step-connector-line"></div>
+
+            <!-- 04 -->
+            <div class="journey-step-item">
+              <div class="step-circle"><i class="fa-solid fa-hammer"></i></div>
+              <div class="step-info">
+                <span>04</span>
+                <h4>Build</h4>
+                <p>Bring support you need.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teaser Media Banner -->
+        <div class="journey-teaser-banner">
+          <div class="journey-teaser-content">
+            <p><span class="play-button-circle"><i class="fa-solid fa-play"></i></span> Your dream home is closer than you think.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESIGN & ARCHITECTURE STUDIO ("IMAGINE IT BEFORE YOU BUILD IT") -->
+  <section class="design-studio-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span style="font-size:0.75rem; font-weight:800; color:var(--primary); letter-spacing:0.8px; text-transform:uppercase;">DESIGN & ARCHITECTURE</span>
+          <h2>Imagine It Before You Build It.</h2>
+          <p>Visualize, plan and design your perfect space with verified architectural partners.</p>
+        </div>
+        <a href="design.html" class="view-all-link">
+          Explore Design Studio <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="design-services-grid">
+        <!-- 1. Interior Design -->
+        <div class="design-card" onclick="window.location.href='design.html?service=interior'">
+          <div class="design-thumb" style="background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80');"></div>
+          <div class="design-card-body">
+            <h4>Interior Design</h4>
+            <p>Bespoke interior solutions</p>
+          </div>
+        </div>
+
+        <!-- 2. 2D Floor Plans -->
+        <div class="design-card" onclick="window.location.href='house-plans.html?type=2d'">
+          <div class="design-thumb" style="background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600&q=80');"></div>
+          <div class="design-card-body">
+            <h4>2D Floor Plans</h4>
+            <p>Precise architectural blueprints</p>
+          </div>
+        </div>
+
+        <!-- 3. 3D House Designs -->
+        <div class="design-card" onclick="window.location.href='design.html?service=3d'">
+          <div class="design-thumb" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80');"></div>
+          <div class="design-card-body">
+            <h4>3D House Designs</h4>
+            <p>Photorealistic 3D renders</p>
+          </div>
+        </div>
+
+        <!-- 4. Elevation Designs -->
+        <div class="design-card" onclick="window.location.href='design.html?service=elevation'">
+          <div class="design-thumb" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80');"></div>
+          <div class="design-card-body">
+            <h4>Elevation Designs</h4>
+            <p>Contemporary villa facades</p>
+          </div>
+        </div>
+
+        <!-- 5. Vastu Plans -->
+        <div class="design-card" onclick="window.location.href='design.html?service=vastu'">
+          <div class="design-thumb" style="background-image: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80');"></div>
+          <div class="design-card-body">
+            <h4>Vastu Plans</h4>
+            <p>Harmonious energy layouts</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME LOAN FINANCING & TRUST PILLARS -->
+  <section class="loan-trust-section">
+    <div class="container">
+      <div class="loan-banner-box">
+        <div class="loan-text-wrap">
+          <span style="font-size:0.75rem; font-weight:800; color:var(--primary); letter-spacing:0.8px; text-transform:uppercase;">HOME LOAN ASSISTANCE</span>
+          <h3>Your Dream Home, With the Right Financing.</h3>
+          <p>Connect with lending partners and move closer to your property goals with paperless approval.</p>
+          <a href="loans.html" class="btn-hero-primary" style="margin-top:18px; padding:10px 22px; font-size:0.88rem;">
+            Check Loan Eligibility <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="loan-steps-row">
+          <div class="loan-step-badge">
+            <div class="loan-step-icon"><i class="fa-solid fa-address-card"></i></div>
+            <h5>01 Register</h5>
+            <span>Create your account</span>
+          </div>
+          <div class="loan-step-badge">
+            <div class="loan-step-icon"><i class="fa-solid fa-file-shield"></i></div>
+            <h5>02 Verification</h5>
+            <span>Complete digital KYC</span>
+          </div>
+          <div class="loan-step-badge">
+            <div class="loan-step-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <h5>03 Partner Lender</h5>
+            <span>Get best interest offers</span>
+          </div>
+          <div class="loan-step-badge">
+            <div class="loan-step-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <h5>04 Assistance</h5>
+            <span>Instant home loan approval</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRUST PILLARS STRIP -->
+      <div class="trust-pillars-strip">
+        <div class="trust-pillar-item">
+          <div class="trust-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="trust-content">
+            <h5>10,000+ Happy Customers</h5>
+            <p>Trusted across tier-1 Indian cities</p>
+          </div>
+        </div>
+
+        <div class="trust-pillar-item">
+          <div class="trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="trust-content">
+            <h5>Verified Properties</h5>
+            <p>100% genuine titles & legal vetting</p>
+          </div>
+        </div>
+
+        <div class="trust-pillar-item">
+          <div class="trust-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="trust-content">
+            <h5>AI-Powered Search</h5>
+            <p>Smarter, faster lifestyle matching</p>
+          </div>
+        </div>
+
+        <div class="trust-pillar-item">
+          <div class="trust-icon"><i class="fa-solid fa-user-tie"></i></div>
+          <div class="trust-content">
+            <h5>Trusted Professionals</h5>
+            <p>Quality advisors you can rely on</p>
+          </div>
+        </div>
+
+        <div class="trust-pillar-item">
+          <div class="trust-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+          <div class="trust-content">
+            <h5>Transparent Process</h5>
+            <p>Zero hidden brokerages & fees</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CALL TO ACTION BANNER -->
+  <section class="bottom-cta-section">
+    <div class="container">
+      <div class="bottom-cta-banner">
+        <div class="bottom-cta-content">
+          <h2>Build the Future You Imagine.</h2>
+          <p>Everything you need for your property journey, connected seamlessly in one ecosystem.</p>
+        </div>
+        <div class="bottom-cta-buttons">
+          <a href="buy.html" class="btn-hero-primary" style="background:#ffffff; color:var(--primary-dark);">
+            Explore Properties <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a href="sell.html" class="btn-hero-secondary" style="background:rgba(255,255,255,0.2); color:#ffffff; border-color:rgba(255,255,255,0.4);">
+            List Your Property
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="background:#ffffff; padding:6px 14px; border-radius:10px; display:inline-block; margin-bottom:12px;">
+            <img src="images/logo.png" alt="XenProperty" style="height:48px; display:block;">
+          </div>
+          <p>Where Dreams Your Home... India's premier AI-powered real estate and architecture ecosystem.</p>
+          <div class="footer-socials">
+            <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Real Estate</h4>
+          <ul class="footer-links">
+            <li><a href="buy.html">Buy Properties</a></li>
+            <li><a href="rent.html">Rental Homes</a></li>
+            <li><a href="buy.html?type=commercial">Commercial Spaces</a></li>
+            <li><a href="sell.html">Post Property Free</a></li>
+            <li><a href="buy.html?sort=ai_match">AI Top Picks</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Architecture</h4>
+          <ul class="footer-links">
+            <li><a href="design.html">Interior Studio</a></li>
+            <li><a href="house-plans.html">2D Floor Plans</a></li>
+            <li><a href="design.html?service=3d">3D House Renders</a></li>
+            <li><a href="design.html?service=vastu">Vastu Consultations</a></li>
+            <li><a href="services.html">Renovation Advisory</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Financial & Legal</h4>
+          <ul class="footer-links">
+            <li><a href="loans.html">Home Loan Calculator</a></li>
+            <li><a href="loans.html">Partner Bank Rates</a></li>
+            <li><a href="services.html">Title Verification</a></li>
+            <li><a href="services.html">Property Valuation</a></li>
+            <li><a href="services.html">Packers & Movers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About XenProperty</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+            <li><a href="admin.html">Admin Portal</a></li>
+            <li><a href="about.html#careers">Careers</a></li>
+            <li><a href="contact.html#faq">Frequently Asked Questions</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 XenProperty Technologies India Pvt. Ltd. All rights reserved.</div>
+        <div style="display:flex; gap:20px;">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">RERA Disclaimers</a>
+          <a href="#">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/matcher.js"></script>
+  <script src="js/demo-store.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

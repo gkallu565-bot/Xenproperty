@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architectural House Plans & 2D/3D Blueprints | XenProperty</title>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="XenProperty - Where Dreams Your Home..." class="brand-logo-img">
+      </a>
+      <ul class="nav-links">
+        <li><a href="buy.html" class="nav-link">Buy</a></li>
+        <li><a href="rent.html" class="nav-link">Rent</a></li>
+        <li><a href="sell.html" class="nav-link">Sell</a></li>
+        <li><a href="design.html" class="nav-link">Design</a></li>
+        <li><a href="house-plans.html" class="nav-link active">House Plans</a></li>
+        <li><a href="loans.html" class="nav-link">Home Loans</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+      </ul>
+      <div class="nav-actions" id="navbarAuthArea">
+        <a href="login.html" class="btn-auth-login">Login</a>
+      </div>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- MINI HERO -->
+  <div class="page-hero-mini" style="background: linear-gradient(135deg, #0f766e 0%, #0f5b46 100%);">
+    <div class="container">
+      <span style="font-size:0.75rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:999px;">
+        <i class="fa-solid fa-compass"></i> 100% VASTU COMPLIANT LAYOUTS
+      </span>
+      <h1 style="margin-top:12px;">Pre-Engineered Architectural House Plans</h1>
+      <p>Explore high-precision 2D floor plans, 3D structural models, and turnkey construction blueprints designed by licensed architects.</p>
+    </div>
+  </div>
+
+  <main class="container" style="margin-bottom:60px;">
+    <!-- FILTER CHIPS -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:16px;">
+      <div class="filter-chips-row">
+        <button class="filter-chip active" onclick="filterPlans('all', this)">All Plans</button>
+        <button class="filter-chip" onclick="filterPlans('2bhk', this)">2 BHK Plans</button>
+        <button class="filter-chip" onclick="filterPlans('3bhk', this)">3 BHK Plans</button>
+        <button class="filter-chip" onclick="filterPlans('4bhk', this)">4 BHK Duplex</button>
+        <button class="filter-chip" onclick="filterPlans('vastu', this)">Vastu Oriented</button>
+      </div>
+      <div style="font-size:0.88rem; color:var(--text-muted);">Showing <strong>6 Architectural Blueprints</strong></div>
+    </div>
+
+    <!-- PLANS GRID -->
+    <div class="properties-grid" id="plansGrid">
+      <!-- Plan 1 -->
+      <div class="marketplace-card plan-item 3bhk vastu">
+        <div class="market-card-img" style="background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80');">
+          <span class="badge-verified" style="position:absolute; top:12px; left:12px;"><i class="fa-solid fa-check"></i> Vastu Certified</span>
+          <div class="badge-favorite" data-id="901" onclick="event.stopPropagation(); togglePlanFav(this, 901, 'Serenity 3 BHK Duplex Blueprint', 'â‚¹14,999', 14999, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80', 3, 3, 1650, 'Villa Layout â€¢ 30x40 Plot')" style="position:absolute; top:12px; right:12px; z-index:10;" title="Save to Favorites">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+        </div>
+        <div class="market-card-body">
+          <div style="font-size:0.76rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Villa Layout â€¢ 30x40 Plot</div>
+          <h3 class="market-card-title">Serenity 3 BHK Duplex Blueprint</h3>
+          <p style="font-size:0.8rem; color:#6b7280; margin:4px 0;">North-East facing pooja room, open island kitchen, double height living room.</p>
+          <div class="market-card-specs">
+            <span><i class="fa-solid fa-bed"></i> 3 Beds</span>
+            <span><i class="fa-solid fa-bath"></i> 3 Baths</span>
+            <span><i class="fa-solid fa-vector-square"></i> 1,650 sq.ft.</span>
+          </div>
+          <div class="market-card-footer">
+            <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">â‚¹14,999 <small style="font-size:0.7rem; color:#6b7280;">Full CAD</small></span>
+            <button class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;" onclick="requestPlan('Serenity 3 BHK Duplex')">Get Plan CAD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan 2 -->
+      <div class="marketplace-card plan-item 4bhk vastu">
+        <div class="market-card-img" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80');">
+          <span class="badge-verified" style="position:absolute; top:12px; left:12px;"><i class="fa-solid fa-compass"></i> East Facing</span>
+          <div class="badge-favorite" data-id="902" onclick="event.stopPropagation(); togglePlanFav(this, 902, 'Imperia 4 BHK Courtyard Villa', 'â‚¹24,999', 24999, 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80', 4, 4, 2800, 'Luxury Villa â€¢ 40x60 Plot')" style="position:absolute; top:12px; right:12px; z-index:10;" title="Save to Favorites">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+        </div>
+        <div class="market-card-body">
+          <div style="font-size:0.76rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Luxury Villa â€¢ 40x60 Plot</div>
+          <h3 class="market-card-title">Imperia 4 BHK Courtyard Villa</h3>
+          <p style="font-size:0.8rem; color:#6b7280; margin:4px 0;">Central light-well courtyard, home theater suite, and private plunge deck.</p>
+          <div class="market-card-specs">
+            <span><i class="fa-solid fa-bed"></i> 4 Beds</span>
+            <span><i class="fa-solid fa-bath"></i> 4 Baths</span>
+            <span><i class="fa-solid fa-vector-square"></i> 2,800 sq.ft.</span>
+          </div>
+          <div class="market-card-footer">
+            <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">â‚¹24,999 <small style="font-size:0.7rem; color:#6b7280;">Full CAD + 3D</small></span>
+            <button class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;" onclick="requestPlan('Imperia 4 BHK Courtyard')">Get Plan CAD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan 3 -->
+      <div class="marketplace-card plan-item 2bhk">
+        <div class="market-card-img" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80');">
+          <span class="badge-verified" style="position:absolute; top:12px; left:12px;"><i class="fa-solid fa-bolt"></i> Compact Smart</span>
+          <div class="badge-favorite" data-id="903" onclick="event.stopPropagation(); togglePlanFav(this, 903, 'Urban Eco 2 BHK Ground+1', 'â‚¹9,999', 9999, 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80', 2, 2, 1150, 'Compact Villa â€¢ 20x30 Plot')" style="position:absolute; top:12px; right:12px; z-index:10;" title="Save to Favorites">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+        </div>
+        <div class="market-card-body">
+          <div style="font-size:0.76rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Compact Villa â€¢ 20x30 Plot</div>
+          <h3 class="market-card-title">Urban Eco 2 BHK Ground+1</h3>
+          <p style="font-size:0.8rem; color:#6b7280; margin:4px 0;">Zero space wastage floor plan designed for urban narrow plots.</p>
+          <div class="market-card-specs">
+            <span><i class="fa-solid fa-bed"></i> 2 Beds</span>
+            <span><i class="fa-solid fa-bath"></i> 2 Baths</span>
+            <span><i class="fa-solid fa-vector-square"></i> 1,150 sq.ft.</span>
+          </div>
+          <div class="market-card-footer">
+            <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">â‚¹9,999 <small style="font-size:0.7rem; color:#6b7280;">Full CAD</small></span>
+            <button class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;" onclick="requestPlan('Urban Eco 2 BHK')">Get Plan CAD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan 4 -->
+      <div class="marketplace-card plan-item 3bhk">
+        <div class="market-card-img" style="background-image: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80');">
+          <span class="badge-verified" style="position:absolute; top:12px; left:12px;"><i class="fa-solid fa-palette"></i> Modern</span>
+          <div class="badge-favorite" data-id="904" onclick="event.stopPropagation(); togglePlanFav(this, 904, 'Nordic Horizon 3 BHK Suite', 'â‚¹12,499', 12499, 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80', 3, 3, 1520, 'Apartment Layout â€¢ 3 BHK')" style="position:absolute; top:12px; right:12px; z-index:10;" title="Save to Favorites">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+        </div>
+        <div class="market-card-body">
+          <div style="font-size:0.76rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Apartment Layout â€¢ 3 BHK</div>
+          <h3 class="market-card-title">Nordic Horizon 3 BHK Suite</h3>
+          <p style="font-size:0.8rem; color:#6b7280; margin:4px 0;">Dual balconies, master walk-in wardrobe, and smart utility area.</p>
+          <div class="market-card-specs">
+            <span><i class="fa-solid fa-bed"></i> 3 Beds</span>
+            <span><i class="fa-solid fa-bath"></i> 3 Baths</span>
+            <span><i class="fa-solid fa-vector-square"></i> 1,520 sq.ft.</span>
+          </div>
+          <div class="market-card-footer">
+            <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">â‚¹12,499 <small style="font-size:0.7rem; color:#6b7280;">Working Drawing</small></span>
+            <button class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;" onclick="requestPlan('Nordic Horizon 3 BHK')">Get Plan CAD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan 5 -->
+      <div class="marketplace-card plan-item 4bhk vastu">
+        <div class="market-card-img" style="background-image: url('https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80');">
+          <span class="badge-verified" style="position:absolute; top:12px; left:12px;"><i class="fa-solid fa-gem"></i> Ultra Luxury</span>
+          <div class="badge-favorite" data-id="905" onclick="event.stopPropagation(); togglePlanFav(this, 905, 'The Royal Crest 5 BHK Mansion', 'â‚¹39,999', 39999, 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80', 5, 6, 4600, 'Mansion â€¢ 50x80 Plot')" style="position:absolute; top:12px; right:12px; z-index:10;" title="Save to Favorites">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+        </div>
+        <div class="market-card-body">
+          <div style="font-size:0.76rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Mansion â€¢ 50x80 Plot</div>
+          <h3 class="market-card-title">The Royal Crest 5 BHK Mansion</h3>
+          <p style="font-size:0.8rem; color:#6b7280; margin:4px 0;">Sprawling estate blueprint with 4-car garage, elevator shaft, and infinity pool layout.</p>
+          <div class="market-card-specs">
+            <span><i class="fa-solid fa-bed"></i> 5 Beds</span>
+            <span><i class="fa-solid fa-bath"></i> 6 Baths</span>
+            <span><i class="fa-solid fa-vector-square"></i> 4,600 sq.ft.</span>
+          </div>
+          <div class="market-card-footer">
+            <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">â‚¹39,999 <small style="font-size:0.7rem; color:#6b7280;">Turnkey CAD</small></span>
+            <button class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;" onclick="requestPlan('The Royal Crest Mansion')">Get Plan CAD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan 6 -->
+      <div class="marketplace-card plan-item 2bhk vastu">
+        <div class="market-card-img" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80');">
+          <span class="badge-verified" style="position:absolute; top:12px; left:12px;"><i class="fa-solid fa-check"></i> Vastu</span>
+          <div class="badge-favorite" data-id="906" onclick="event.stopPropagation(); togglePlanFav(this, 906, 'Vedic Harmony 2 BHK Modern', 'â‚¹11,999', 11999, 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80', 2, 2, 1280, 'Duplex â€¢ 30x30 Plot')" style="position:absolute; top:12px; right:12px; z-index:10;" title="Save to Favorites">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+        </div>
+        <div class="market-card-body">
+          <div style="font-size:0.76rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Duplex â€¢ 30x30 Plot</div>
+          <h3 class="market-card-title">Vedic Harmony 2 BHK Modern</h3>
+          <p style="font-size:0.8rem; color:#6b7280; margin:4px 0;">Strict Ishanya & Agneya positioning for maximum positive energy.</p>
+          <div class="market-card-specs">
+            <span><i class="fa-solid fa-bed"></i> 2 Beds</span>
+            <span><i class="fa-solid fa-bath"></i> 2 Baths</span>
+            <span><i class="fa-solid fa-vector-square"></i> 1,280 sq.ft.</span>
+          </div>
+          <div class="market-card-footer">
+            <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">â‚¹11,999 <small style="font-size:0.7rem; color:#6b7280;">Full CAD</small></span>
+            <button class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;" onclick="requestPlan('Vedic Harmony 2 BHK')">Get Plan CAD</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 XenProperty Technologies India Pvt. Ltd. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/matcher.js"></script>
+
+  <script src="js/demo-store.js"></script>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function filterPlans(filter, btn) {
+      document.querySelectorAll('.filter-chips-row .filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.plan-item').forEach(item => {
+        if (filter === 'all' || item.classList.contains(filter)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function requestPlan(planName) {
+      showToast(`Request sent for ${planName} blueprint! An architect will email you CAD files.`, 'success');
+    }
+
+    function togglePlanFav(btn, id, title, priceDisplay, price, imageUrl, beds, baths, areaSqft, city) {
+      const planData = {
+        id: id,
+        title: title,
+        price_display: priceDisplay,
+        price: price,
+        city: city || 'Architectural Blueprint',
+        address: 'Turnkey Architectural Blueprint',
+        image_url: imageUrl,
+        beds: beds,
+        baths: baths,
+        area_sqft: areaSqft,
+        listing_type: 'House Plan'
+      };
+      if (typeof xenFavorites !== 'undefined') {
+        xenFavorites.toggleFavorite(planData, btn);
+      }
+    }
+
+    // Ensure heart icons reflect saved state on load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof xenFavorites !== 'undefined') {
+        xenFavorites.syncHeartIcons();
+      }
+    });
+  </script>
+</body>
+</html>

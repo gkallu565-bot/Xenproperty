@@ -1,0 +1,27 @@
+# Secrets - never commit these
+.secret.tmp
+*.pem
+service-account*.json
+auth-users.json
+
+# Local database
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# Dependencies / build
+node_modules/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Temp logs
+_*.log
+_*.err
+qa-srv.log
+qa-srv.err
+*.log
+!npm-debug.log*

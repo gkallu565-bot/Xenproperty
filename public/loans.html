@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Loans & EMI Calculator - Lowest Interest Rates | XenProperty</title>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="XenProperty - Where Dreams Your Home..." class="brand-logo-img">
+      </a>
+      <ul class="nav-links">
+        <li><a href="buy.html" class="nav-link">Buy</a></li>
+        <li><a href="rent.html" class="nav-link">Rent</a></li>
+        <li><a href="sell.html" class="nav-link">Sell</a></li>
+        <li><a href="design.html" class="nav-link">Design</a></li>
+        <li><a href="house-plans.html" class="nav-link">House Plans</a></li>
+        <li><a href="loans.html" class="nav-link active">Home Loans</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+      </ul>
+      <div class="nav-actions" id="navbarAuthArea">
+        <a href="login.html" class="btn-auth-login">Login</a>
+      </div>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- MINI HERO -->
+  <div class="page-hero-mini" style="background: linear-gradient(135deg, #0b3b2e 0%, #0369a1 100%);">
+    <div class="container">
+      <span style="font-size:0.75rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:999px;">
+        <i class="fa-solid fa-building-columns"></i> RATES STARTING AT 8.40% P.A.
+      </span>
+      <h1 style="margin-top:12px;">Instant Home Financing & EMI Calculator</h1>
+      <p>Compare pre-negotiated interest rates from India's premier banks (HDFC, SBI, ICICI, Axis) with paperless digital sanction.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <!-- INTERACTIVE EMI CALCULATOR -->
+    <div class="calculator-card">
+      <div>
+        <h2 style="font-size:1.4rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">Home Loan EMI Calculator</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:24px;">Adjust loan principal, interest rate, and repayment tenure.</p>
+
+        <!-- Slider 1: Loan Amount -->
+        <div class="range-slider-group">
+          <div class="range-slider-header">
+            <span>Loan Amount</span>
+            <strong id="loanAmountVal">â‚¹50.0 Lakh</strong>
+          </div>
+          <input type="range" id="loanAmountSlider" min="500000" max="50000000" step="100000" value="5000000" class="calc-slider" aria-label="Loan amount">
+          <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#9ca3af; margin-top:4px;">
+            <span>â‚¹5 Lakh</span><span>â‚¹5 Cr</span>
+          </div>
+        </div>
+
+        <!-- Slider 2: Interest Rate -->
+        <div class="range-slider-group">
+          <div class="range-slider-header">
+            <span>Interest Rate (% p.a.)</span>
+            <strong id="interestRateVal">8.50%</strong>
+          </div>
+          <input type="range" id="interestRateSlider" min="7.0" max="15.0" step="0.05" value="8.50" class="calc-slider" aria-label="Interest rate">
+          <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#9ca3af; margin-top:4px;">
+            <span>7.0%</span><span>15.0%</span>
+          </div>
+        </div>
+
+        <!-- Slider 3: Loan Tenure -->
+        <div class="range-slider-group">
+          <div class="range-slider-header">
+            <span>Tenure (Years)</span>
+            <strong id="tenureVal">20 Years</strong>
+          </div>
+          <input type="range" id="tenureSlider" min="1" max="30" step="1" value="20" class="calc-slider" aria-label="Loan tenure in years">
+          <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#9ca3af; margin-top:4px;">
+            <span>1 Year</span><span>30 Years</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Display -->
+      <div class="calc-result-box">
+        <div>
+          <span style="font-size:0.8rem; font-weight:700; color:#a7f3d0; text-transform:uppercase; letter-spacing:0.5px;">Your Monthly Payment</span>
+          <div class="calc-emi-large" id="monthlyEMIVal">â‚¹43,391</div>
+          <p style="font-size:0.8rem; opacity:0.85; margin-top:2px;">Calculated on reducing balance method.</p>
+        </div>
+
+        <!-- Proportion Visualizer -->
+        <div>
+          <div style="font-size:0.75rem; opacity:0.85; margin-bottom:6px;">Payment Breakdown (Principal vs Interest)</div>
+          <div id="emiProportionBar" style="height:10px; border-radius:999px; background:linear-gradient(90deg, #10b981 0%, #10b981 48%, #f59e0b 48%, #f59e0b 100%); margin-bottom:12px;"></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+            <span><i class="fa-solid fa-circle" style="color:#10b981; font-size:0.6rem;"></i> Principal: <strong id="principalAmountDisplay">â‚¹50,00,000</strong></span>
+            <span><i class="fa-solid fa-circle" style="color:#f59e0b; font-size:0.6rem;"></i> Total Interest: <strong id="totalInterestDisplay">â‚¹54,13,879</strong></span>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.2); padding-top:16px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:0.75rem; opacity:0.8;">Total Payable:</div>
+            <strong id="totalPayableDisplay" style="font-size:1.1rem; color:#ffffff;">â‚¹1,04,13,879</strong>
+          </div>
+          <a href="#loanApplyForm" class="btn-hero-primary" style="background:#ffffff; color:var(--primary-dark); padding:8px 16px; font-size:0.82rem;">
+            Apply Now
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- BANK COMPARISON TABLE -->
+    <div style="margin-bottom:50px;">
+      <h3 style="font-size:1.3rem; font-weight:800; color:var(--text-main); margin-bottom:12px;">
+        <i class="fa-solid fa-handshake" style="color:var(--primary); margin-right:8px;"></i> Pre-Approved Lending Partners
+      </h3>
+      <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+  <table class="bank-comparison-table">
+        <thead>
+          <tr>
+            <th>Partner Bank</th>
+            <th>Interest Rate Range</th>
+            <th>Max Loan Tenure</th>
+            <th>Processing Fee</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong><i class="fa-solid fa-building-columns" style="color:#0284c7; margin-right:6px;"></i> HDFC Bank</strong></td>
+            <td><strong style="color:var(--primary);">8.40% - 9.15%</strong></td>
+            <td>30 Years</td>
+            <td>0.50% (Max â‚¹3,000)</td>
+            <td><a href="#loanApplyForm" class="btn-hero-primary" style="padding:6px 14px; font-size:0.75rem;">Apply HDFC</a></td>
+          </tr>
+          <tr>
+            <td><strong><i class="fa-solid fa-building-columns" style="color:#16a34a; margin-right:6px;"></i> State Bank of India (SBI)</strong></td>
+            <td><strong style="color:var(--primary);">8.50% - 9.05%</strong></td>
+            <td>30 Years</td>
+            <td>Zero Processing Fee</td>
+            <td><a href="#loanApplyForm" class="btn-hero-primary" style="padding:6px 14px; font-size:0.75rem;">Apply SBI</a></td>
+          </tr>
+          <tr>
+            <td><strong><i class="fa-solid fa-building-columns" style="color:#dc2626; margin-right:6px;"></i> ICICI Bank</strong></td>
+            <td><strong style="color:var(--primary);">8.60% - 9.25%</strong></td>
+            <td>30 Years</td>
+            <td>0.50%</td>
+            <td><a href="#loanApplyForm" class="btn-hero-primary" style="padding:6px 14px; font-size:0.75rem;">Apply ICICI</a></td>
+          </tr>
+          <tr>
+            <td><strong><i class="fa-solid fa-building-columns" style="color:#9333ea; margin-right:6px;"></i> Axis Bank</strong></td>
+            <td><strong style="color:var(--primary);">8.75% - 9.35%</strong></td>
+            <td>30 Years</td>
+            <td>Flat â‚¹10,000</td>
+            <td><a href="#loanApplyForm" class="btn-hero-primary" style="padding:6px 14px; font-size:0.75rem;">Apply Axis</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4-STEP DIGITAL APPLICATION FORM -->
+    <div style="background:#ffffff; border:1px solid #e5ebe7; border-radius:var(--radius-xl); padding:36px; box-shadow:var(--shadow-md); margin-bottom:60px;">
+      <h3 style="font-size:1.35rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">
+        Instant Online Pre-Approval Form
+      </h3>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:24px;">No paperwork needed for initial sanction letter. Get instant credit eligibility score.</p>
+
+      <div id="loanApprovalStatus" style="display:none; margin-bottom:24px;"></div>
+
+      <form id="loanApplyForm">
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Full Name (as per PAN) *</label>
+            <input type="text" id="loanFullName" required class="form-control" placeholder="Rahul Sharma">
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="loanEmail" required class="form-control" placeholder="rahul@example.com">
+          </div>
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="loanPhone" required class="form-control" placeholder="+91 98765 43210">
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Requested Loan Amount (â‚¹) *</label>
+            <input type="number" id="loanReqAmount" required class="form-control" value="5000000" aria-label="Requested loan amount">
+          </div>
+          <div class="form-group">
+            <label>Net Monthly In-Hand Income (â‚¹) *</label>
+            <input type="number" id="loanMonthlyIncome" required class="form-control" placeholder="e.g. 120000" value="120000">
+          </div>
+          <div class="form-group">
+            <label>Property City *</label>
+            <select id="loanCity" class="form-control" aria-label="Property city">
+              <option value="Bangalore">Bangalore</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Pune">Pune</option>
+              <option value="Gurgaon">Gurgaon</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Employment Nature</label>
+            <select id="loanEmployment" class="form-control" aria-label="Employment type">
+              <option value="Salaried">Salaried (Corporate / Govt)</option>
+              <option value="Self-Employed">Self-Employed Professional / Business Owner</option>
+              <option value="NRI">NRI (Non-Resident Indian)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Preferred Lending Partner</label>
+            <select id="loanBankPref" class="form-control" aria-label="Preferred bank">
+              <option value="HDFC Bank">HDFC Bank</option>
+              <option value="State Bank of India">State Bank of India (SBI)</option>
+              <option value="ICICI Bank">ICICI Bank</option>
+              <option value="Axis Bank">Axis Bank</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="submitLoanBtn" class="btn-submit-primary" style="font-size:1rem; padding:14px; margin-top:10px;">
+          Submit Instant Application <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 XenProperty Technologies India Pvt. Ltd. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/matcher.js"></script>
+
+  <script src="js/demo-store.js"></script>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/calculator.js"></script>
+</body>
+</html>
