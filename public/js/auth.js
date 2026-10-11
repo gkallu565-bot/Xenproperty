@@ -132,15 +132,48 @@ async function handleRegister(e) {
   }
 }
 
-// 1-Click Demo Logins
-function fillDemoUser() {
-  document.getElementById('loginEmail').value = 'rahul@xenproperty.com';
-  document.getElementById('loginPassword').value = 'user123';
-  showToast('Filled User credentials (rahul@xenproperty.com)', 'success');
+/**
+ * One-click demo sign-in.
+ *
+ * These buttons used to do nothing but fill the sign-in form. That was not
+ * merely unhelpful, it was invisible: the form they filled lives on the "Sign
+ * In" tab, so anyone looking at the "Create Account" tab - which is the tab
+ * they had clicked from - saw no change at all, and no login happened.
+ *
+ * They now switch to the sign-in tab, show what they are doing, sign in for
+ * real, and return to the home page.
+ */
+async function demoSignIn(email, password, label) {
+  const emailInput = document.getElementById('loginEmail');
+  const passwordInput = document.getElementById('loginPassword');
+  const btn = document.getElementById('loginSubmitBtn');
+  if (!emailInput || !passwordInput || !btn) return;
+
+  switchAuthTab('login');
+  emailInput.value = email;
+  passwordInput.value = password;
+
+  const originalLabel = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Signing in as ${escapeHtml(label)}...`;
+
+  try {
+    const res = await api.login(email, password);
+    showToast(`Signed in as ${res.user.full_name}`, 'success');
+    window.location.href = 'index.html';
+  } catch (err) {
+    showAuthError(err.message);
+    btn.disabled = false;
+    btn.innerHTML = originalLabel;
+    passwordInput.value = '';
+    passwordInput.focus();
+  }
 }
 
-function fillDemoAdmin() {
-  document.getElementById('loginEmail').value = 'admin@xenproperty.com';
-  document.getElementById('loginPassword').value = 'admin123';
-  showToast('Filled Admin credentials (admin@xenproperty.com)', 'success');
+function demoLoginAsUser() {
+  demoSignIn('rahul@xenproperty.com', 'user123', 'Demo User');
+}
+
+function demoLoginAsAdmin() {
+  demoSignIn('admin@xenproperty.com', 'admin123', 'Demo Admin');
 }

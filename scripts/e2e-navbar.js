@@ -83,26 +83,52 @@ const readNav = (page) =>
   });
 
 /**
- * readNav, but tolerant of a navigation landing mid-read.
+ * readNav, but tolerant of a page that has not finished arriving.
  *
- * A live deploy answers /sell.html with a 301 to /sell, which can destroy the
- * execution context between one evaluate() and the next. Retrying for a moment
- * is the honest fix - the page genuinely has not finished arriving yet.
+ * Two ways this goes wrong on a live deploy: a cleanUrls 301 can destroy the
+ * execution context between one evaluate() and the next, and a freshly loaded
+ * document can simply not have #navbarAuthArea yet. Retry through both rather
+ * than reporting a failure that is really just the page being slow.
  */
-async function navState(page, attempts = 6) {
+async function navState(page, attempts = 8) {
   let lastErr;
   for (let i = 0; i < attempts; i++) {
     try {
-      return await readNav(page);
+      const state = await readNav(page);
+      if (state) return state;
     } catch (err) {
       lastErr = err;
       if (!/context was destroyed|Target (page|closed)|navigation|Execution context/i.test(err.message)) {
         throw err;
       }
-      await wait(700);
     }
+    await wait(700);
   }
-  throw lastErr;
+  if (lastErr) throw lastErr;
+  throw new Error('the navbar never appeared');
+}
+
+/**
+ * Delete the throwaway account this suite registers.
+ *
+ * The registration step writes a real row when BASE_URL points at the live
+ * Express API, so leaving it behind would quietly grow the users table every
+ * run. There is no DELETE endpoint for accounts, so go through the local SQLite
+ * database - the same approach test.js uses for the rows it creates. Against a
+ * hosted deploy there is nothing to clean locally, so say so rather than
+ * pretending it was handled.
+ */
+async function cleanupTestAccount(email) {
+  if (!email) return;
+  try {
+    const { dbRun } = require('../database');
+    const r = await dbRun('DELETE FROM users WHERE email = ?', [email]);
+    console.log(`\n  cleanup: removed ${r.changes} test account(s) (${email})`);
+  } catch (err) {
+    console.log(`\n  cleanup: could not remove ${email} - ${err.message}`);
+    console.log(`  NOTE  this suite registered a real account against ${BASE}.`);
+    console.log('        Delete it, or re-run against the demo backend only.');
+  }
 }
 
 (async () => {
@@ -120,6 +146,7 @@ async function navState(page, attempts = 6) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
 
+  let registeredEmail = null;
   const jsErrors = [];
   page.on('pageerror', (e) => jsErrors.push(`pageerror: ${e.message}`));
   page.on('console', (m) => {
@@ -177,6 +204,7 @@ async function navState(page, attempts = 6) {
     await page.fill('#regEmail', NEW_USER.email);
     await page.fill('#regPhone', NEW_USER.phone);
     await page.fill('#regPassword', NEW_USER.password);
+    registeredEmail = NEW_USER.email;
     await Promise.all([
       page.waitForURL(/sell(\.html)?($|[?#])/, { timeout: 15000 }),
       page.click('#registerSubmitBtn'),
@@ -187,10 +215,10 @@ async function navState(page, attempts = 6) {
       /sell(\.html)?($|[?#])/.test(page.url()), page.url());
 
     const nav1 = await navState(page);
-    check('the new name appears in the navbar', nav1.badge === NEW_USER.full_name, String(nav1.badge));
-    check('the badge links to the profile', nav1.badgeHref === 'profile.html', String(nav1.badgeHref));
-    check('still no Login/Sign Up after registering', !nav1.hasSignInLink, JSON.stringify(nav1.texts));
-    check('still no Logout in the navbar', !nav1.hasLogout, JSON.stringify(nav1.texts));
+    check('the new name appears in the navbar', nav1?.badge === NEW_USER.full_name, JSON.stringify(nav1));
+    check('the badge links to the profile', nav1?.badgeHref === 'profile.html', JSON.stringify(nav1));
+    check('still no Login/Sign Up after registering', !nav1?.hasSignInLink, JSON.stringify(nav1));
+    check('still no Logout in the navbar', !nav1?.hasLogout, JSON.stringify(nav1));
 
     /* ------------------------------------------------------------------ */
     section('4. Clicking the name opens the profile');
@@ -198,7 +226,7 @@ async function navState(page, attempts = 6) {
     await page.goto(`${BASE}/buy.html`, { waitUntil: 'domcontentloaded' });
     await settle(page);
     const navBefore = await navState(page);
-    check('the name is visible on other pages too', navBefore.badge === NEW_USER.full_name, String(navBefore.badge));
+    check('the name is visible on other pages too', navBefore?.badge === NEW_USER.full_name, JSON.stringify(navBefore));
 
     await Promise.all([
       page.waitForURL(PROFILE_URL, { timeout: 15000 }),
@@ -244,9 +272,9 @@ async function navState(page, attempts = 6) {
 
     await wait(1800);
     const after = await navState(page);
-    check('the name is gone from the navbar', after.badge === null, String(after.badge));
-    check('no Login/Sign Up reappeared', !after.hasSignInLink, JSON.stringify(after.texts));
-    check('"List Property" is back to gating again', after.listBtn, JSON.stringify(after.texts));
+    check('the name is gone from the navbar', !!after && after.badge === null, JSON.stringify(after));
+    check('no Login/Sign Up reappeared', !after?.hasSignInLink, JSON.stringify(after));
+    check('"List Property" is back to gating again', !!after?.listBtn, JSON.stringify(after));
 
     // And the gate must work again after signing out.
     await Promise.all([
@@ -257,7 +285,70 @@ async function navState(page, attempts = 6) {
       /login(\.html)?($|[?#])/.test(page.url()), page.url());
 
     /* ------------------------------------------------------------------ */
-    section('7. JavaScript errors');
+    section('7. The 1-click demo login buttons really log in');
+
+    // The bug this covers: these buttons used to only fill the sign-in form,
+    // which lives on the "Sign In" tab. Clicked from the "Create Account" tab
+    // nothing visible happened and no login took place.
+    await page.goto(`${BASE}/login.html`, { waitUntil: 'domcontentloaded' });
+    await settle(page);
+
+    const demoBtns = await page.evaluate(() => ({
+      user: !!document.querySelector('button[onclick*="demoLoginAsUser"]'),
+      admin: !!document.querySelector('button[onclick*="demoLoginAsAdmin"]'),
+      oldFillers: /fillDemo(User|Admin)/.test(document.documentElement.innerHTML),
+    }));
+    check('a "Demo User" button exists', demoBtns.user, JSON.stringify(demoBtns));
+    check('a "Demo Admin" button exists', demoBtns.admin, JSON.stringify(demoBtns));
+    check('the old fill-only handlers are gone', !demoBtns.oldFillers);
+
+    // Start from the Create Account tab, exactly where a visitor would be.
+    await page.click('#tabSignupBtn');
+    await settle(page, 600);
+    const onSignup = await page.evaluate(
+      () => getComputedStyle(document.getElementById('signupSection')).display !== 'none'
+    );
+    check('the Create Account tab is showing', onSignup);
+
+    await Promise.all([
+      page.waitForURL(/index(\.html)?$|(\/)$/, { timeout: 15000 }),
+      page.click('button[onclick*="demoLoginAsUser"]'),
+    ]);
+    await settle(page);
+    const userState = await navState(page);
+    check('Demo User signs in for real', !!userState && userState.badge === 'Rahul',
+      JSON.stringify(userState));
+    check('Demo User lands on the home page', /(\/)$|index\.html/.test(page.url()), page.url());
+
+    // Now the admin button, again from the Create Account tab.
+    await page.goto(`${BASE}/login.html`, { waitUntil: 'domcontentloaded' });
+    await settle(page);
+    await page.click('#tabSignupBtn');
+    await settle(page, 600);
+
+    await Promise.all([
+      page.waitForURL(/index(\.html)?$|(\/)$/, { timeout: 15000 }),
+      page.click('button[onclick*="demoLoginAsAdmin"]'),
+    ]);
+    await settle(page);
+    const adminState = await page.evaluate(() => {
+      const area = document.getElementById('navbarAuthArea');
+      const badge = area && area.querySelector('.user-badge-nav');
+      const adminLink = area && area.querySelector('.user-badge-admin');
+      return {
+        badge: badge ? badge.textContent.trim() : null,
+        adminLink: adminLink ? adminLink.getAttribute('href') : null,
+        storedRole: JSON.parse(localStorage.getItem('xen_user') || '{}').role || null,
+      };
+    });
+    check('Demo Admin signs in for real', adminState.badge === 'Admin', JSON.stringify(adminState));
+    check('the stored role is admin', adminState.storedRole === 'admin', JSON.stringify(adminState));
+    check('the Admin shortcut appears in the navbar', adminState.adminLink === 'admin.html',
+      JSON.stringify(adminState));
+    check('Demo Admin lands on the home page', /(\/)$|index\.html/.test(page.url()), page.url());
+
+    /* ------------------------------------------------------------------ */
+    section('8. JavaScript errors');
     const real = jsErrors.filter((e) => !/Failed to load resource|net::ERR|ERR_|404/i.test(e));
     check('no JavaScript errors', real.length === 0, real.slice(0, 5).join('\n      '));
 
@@ -272,6 +363,7 @@ async function navState(page, attempts = 6) {
     console.error('\n  RUN ABORTED:', err.message);
     failures.push(`run aborted: ${err.message}`);
   } finally {
+    await cleanupTestAccount(registeredEmail);
     await browser.close();
     if (server) server.kill();
   }
