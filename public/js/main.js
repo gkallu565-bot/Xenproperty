@@ -10,7 +10,34 @@ document.addEventListener('DOMContentLoaded', () => {
   initDemoModeNotice();
 });
 
-// Sync authentication state with navbar
+/**
+ * Guard a page that needs an account.
+ *
+ * Signed in, go straight through. Signed out, bounce to the login page with
+ * ?redirect set so the visitor lands back here afterwards. That page carries
+ * both a login and a register tab, so one entry point covers both.
+ */
+function requireAuth(target = 'sell.html') {
+  if (api.getCurrentUser() && api.getToken()) {
+    window.location.href = target;
+    return true;
+  }
+  window.location.href = `login.html?redirect=${encodeURIComponent(target)}`;
+  return false;
+}
+
+/** The navbar's "List Property" button, gated behind an account. */
+function goListProperty(event) {
+  if (event) event.preventDefault();
+  return requireAuth('sell.html');
+}
+
+// Sync authentication state with navbar.
+//
+// The navbar deliberately carries no Login / Sign Up / Logout controls. One
+// entry point - "List Property" - sends signed-out visitors to the login page,
+// and once signed in their name takes their place; clicking it opens the
+// profile, which is where logging out lives.
 function initAuthUI() {
   const user = api.getCurrentUser();
   const authContainer = document.getElementById('navbarAuthArea');
@@ -24,30 +51,31 @@ function initAuthUI() {
     </button>
   `;
 
+  const listBtnHtml = `
+    <a href="sell.html" class="btn-list-prop" onclick="goListProperty(event)">
+      <i class="fa-solid fa-plus"></i> List Property
+    </a>
+  `;
+
   if (user) {
+    // A record with no name must not throw - fall back to a neutral label.
+    const firstName = String(user.full_name || '').split(' ')[0] || 'Profile';
     authContainer.innerHTML = `
       ${favBtnHtml}
       <a href="profile.html" class="user-badge-nav" title="View my full profile"
          aria-label="View my full profile">
         <i class="fa-solid fa-user-circle"></i>
-        <span>${escapeHtml(user.full_name.split(' ')[0])}</span>
+        <span>${escapeHtml(firstName)}</span>
       </a>
       ${user.role === 'admin'
         ? '<a href="admin.html" class="user-badge-admin"><i class="fa-solid fa-shield"></i> Admin</a>'
         : ''}
-      <button onclick="handleLogout()" class="btn-auth-login" style="padding:6px 12px; font-size:0.8rem; cursor:pointer;">Logout</button>
-      <a href="sell.html" class="btn-list-prop">
-        <i class="fa-solid fa-plus"></i> List Property
-      </a>
+      ${listBtnHtml}
     `;
   } else {
     authContainer.innerHTML = `
       ${favBtnHtml}
-      <a href="login.html" class="btn-auth-login">Login</a>
-      <a href="login.html?tab=signup" class="btn-auth-signup">Sign Up</a>
-      <a href="sell.html" class="btn-list-prop">
-        <i class="fa-solid fa-plus"></i> List Property
-      </a>
+      ${listBtnHtml}
     `;
   }
   xenFavorites.updateBadge();
@@ -56,9 +84,11 @@ function initAuthUI() {
 function handleLogout() {
   api.removeToken();
   showToast('Logged out successfully', 'success');
+  // Go home rather than reloading: reloading the profile would just show the
+  // visitor the sign-in prompt they have already dismissed.
   setTimeout(() => {
-    window.location.reload();
-  }, 600);
+    window.location.href = 'index.html';
+  }, 700);
 }
 
 // Show a toast centred on the screen. Used for auth failures so the message

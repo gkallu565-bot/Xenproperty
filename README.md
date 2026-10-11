@@ -104,11 +104,12 @@ You can log in with the following pre-configured demo accounts or register your 
 
 11. **Login & Register (`login.html`)**:
     - Clean dual tab auth with 1-click demo login buttons.
-    - Signing in opens your profile page. Admins are sent to the admin portal instead.
+    - Reached by pressing **List Property** while signed out. Signing in or
+      registering then returns you to the listing form you were heading for.
 
 12. **My Profile (`profile.html`)**:
     - Your account details, saved properties, your own listings, site visits, loan applications and design requests — in one place.
-    - Click the name badge in the navbar at any time to open it.
+    - The navbar shows your name instead of any Login / Sign Up / Logout button; clicking it opens this page, which is also where you log out.
     - Edit your name and phone number in place. Email and role cannot be changed here.
 
 13. **Admin Portal (`admin.html`)**:
@@ -123,11 +124,13 @@ npm start            # terminal 1 - the app on http://localhost:3000
 npm test             # 165 API/data assertions against the running server
 npm run test:e2e     # Playwright in a headed browser (watch it run)
 npm run test:e2e:demo  # same flows against the in-browser demo backend
+npm run test:e2e:navbar  # the navbar sign-in / registration flow
 ```
 
 The E2E suites drive a real Chromium: signing in, the profile page, editing
-details, price sorting, the EMI calculator and small-screen layout. Both accept
-`--headless` for CI. First run only:
+details, price sorting, the EMI calculator and small-screen layout. Any of them
+accepts `--headless` for CI, and `BASE_URL=<url>` points them at a live deploy
+instead of a local server. First run only:
 
 ```bash
 npx playwright install chromium

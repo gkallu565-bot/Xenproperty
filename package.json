@@ -10,6 +10,7 @@
     "test:e2e": "node scripts/e2e-profile.js",
     "test:e2e:headless": "node scripts/e2e-profile.js --headless",
     "test:e2e:demo": "node scripts/e2e-demo.js",
+    "test:e2e:navbar": "node scripts/e2e-navbar.js",
     "fix:encoding": "node scripts/fix-double-encoding.js --write",
     "check:encoding": "node scripts/fix-double-encoding.js",
     "migrate:firestore": "node scripts/migrate-to-firestore.js"

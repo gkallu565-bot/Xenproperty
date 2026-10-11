@@ -231,6 +231,14 @@ function bindProfileActions(data) {
   });
 }
 
+/**
+ * Logging out lives here rather than in the navbar, so it is easy to press by
+ * accident. Ask first.
+ */
+function confirmLogout() {
+  if (window.confirm('Log out of XenProperty?')) handleLogout();
+}
+
 /* -------------------------------- helpers --------------------------------- */
 
 function setText(id, value) {
