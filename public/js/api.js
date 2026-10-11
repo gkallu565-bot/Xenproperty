@@ -295,6 +295,28 @@ const api = {
     return this.request('/auth/me');
   },
 
+  /** Update the signed-in user's own editable details (name, phone). */
+  async updateMe(details) {
+    const b = await getBackend();
+    const data = isDemoBackend(b)
+      ? await b.updateMe(details)
+      : await this.request('/auth/me', {
+          method: 'PATCH',
+          body: JSON.stringify(details)
+        });
+
+    // Keep the cached session user in step so the navbar name stays correct.
+    if (data && data.user) this.setCurrentUser(data.user);
+    return data;
+  },
+
+  /** The signed-in user's profile page data: details, listings, visits, loans, designs. */
+  async getMyDashboard() {
+    const b = await getBackend();
+    if (isDemoBackend(b)) return b.getMyDashboard();
+    return this.request('/me/dashboard');
+  },
+
   // Admin
   async getAdminStats() {
     const b = await getBackend();

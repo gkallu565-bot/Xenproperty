@@ -55,11 +55,11 @@
         <div class="range-slider-group">
           <div class="range-slider-header">
             <span>Loan Amount</span>
-            <strong id="loanAmountVal">â‚¹50.0 Lakh</strong>
+            <strong id="loanAmountVal">₹50.0 Lakh</strong>
           </div>
           <input type="range" id="loanAmountSlider" min="500000" max="50000000" step="100000" value="5000000" class="calc-slider" aria-label="Loan amount">
           <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#9ca3af; margin-top:4px;">
-            <span>â‚¹5 Lakh</span><span>â‚¹5 Cr</span>
+            <span>₹5 Lakh</span><span>₹5 Cr</span>
           </div>
         </div>
 
@@ -69,9 +69,9 @@
             <span>Interest Rate (% p.a.)</span>
             <strong id="interestRateVal">8.50%</strong>
           </div>
-          <input type="range" id="interestRateSlider" min="7.0" max="15.0" step="0.05" value="8.50" class="calc-slider" aria-label="Interest rate">
+          <input type="range" id="interestRateSlider" min="7.0" max="25.0" step="0.05" value="8.50" class="calc-slider" aria-label="Interest rate">
           <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#9ca3af; margin-top:4px;">
-            <span>7.0%</span><span>15.0%</span>
+            <span>7.0%</span><span>25.0%</span>
           </div>
         </div>
 
@@ -92,7 +92,7 @@
       <div class="calc-result-box">
         <div>
           <span style="font-size:0.8rem; font-weight:700; color:#a7f3d0; text-transform:uppercase; letter-spacing:0.5px;">Your Monthly Payment</span>
-          <div class="calc-emi-large" id="monthlyEMIVal">â‚¹43,391</div>
+          <div class="calc-emi-large" id="monthlyEMIVal">₹43,391</div>
           <p style="font-size:0.8rem; opacity:0.85; margin-top:2px;">Calculated on reducing balance method.</p>
         </div>
 
@@ -101,15 +101,15 @@
           <div style="font-size:0.75rem; opacity:0.85; margin-bottom:6px;">Payment Breakdown (Principal vs Interest)</div>
           <div id="emiProportionBar" style="height:10px; border-radius:999px; background:linear-gradient(90deg, #10b981 0%, #10b981 48%, #f59e0b 48%, #f59e0b 100%); margin-bottom:12px;"></div>
           <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
-            <span><i class="fa-solid fa-circle" style="color:#10b981; font-size:0.6rem;"></i> Principal: <strong id="principalAmountDisplay">â‚¹50,00,000</strong></span>
-            <span><i class="fa-solid fa-circle" style="color:#f59e0b; font-size:0.6rem;"></i> Total Interest: <strong id="totalInterestDisplay">â‚¹54,13,879</strong></span>
+            <span><i class="fa-solid fa-circle" style="color:#10b981; font-size:0.6rem;"></i> Principal: <strong id="principalAmountDisplay">₹50,00,000</strong></span>
+            <span><i class="fa-solid fa-circle" style="color:#f59e0b; font-size:0.6rem;"></i> Total Interest: <strong id="totalInterestDisplay">₹54,13,879</strong></span>
           </div>
         </div>
 
         <div style="border-top:1px solid rgba(255,255,255,0.2); padding-top:16px; display:flex; justify-content:space-between; align-items:center;">
           <div>
             <div style="font-size:0.75rem; opacity:0.8;">Total Payable:</div>
-            <strong id="totalPayableDisplay" style="font-size:1.1rem; color:#ffffff;">â‚¹1,04,13,879</strong>
+            <strong id="totalPayableDisplay" style="font-size:1.1rem; color:#ffffff;">₹1,04,13,879</strong>
           </div>
           <a href="#loanApplyForm" class="btn-hero-primary" style="background:#ffffff; color:var(--primary-dark); padding:8px 16px; font-size:0.82rem;">
             Apply Now
@@ -138,7 +138,7 @@
             <td><strong><i class="fa-solid fa-building-columns" style="color:#0284c7; margin-right:6px;"></i> HDFC Bank</strong></td>
             <td><strong style="color:var(--primary);">8.40% - 9.15%</strong></td>
             <td>30 Years</td>
-            <td>0.50% (Max â‚¹3,000)</td>
+            <td>0.50% (Max ₹3,000)</td>
             <td><a href="#loanApplyForm" class="btn-hero-primary" style="padding:6px 14px; font-size:0.75rem;">Apply HDFC</a></td>
           </tr>
           <tr>
@@ -159,7 +159,7 @@
             <td><strong><i class="fa-solid fa-building-columns" style="color:#9333ea; margin-right:6px;"></i> Axis Bank</strong></td>
             <td><strong style="color:var(--primary);">8.75% - 9.35%</strong></td>
             <td>30 Years</td>
-            <td>Flat â‚¹10,000</td>
+            <td>Flat ₹10,000</td>
             <td><a href="#loanApplyForm" class="btn-hero-primary" style="padding:6px 14px; font-size:0.75rem;">Apply Axis</a></td>
           </tr>
         </tbody>
@@ -193,11 +193,11 @@
 
         <div class="form-row-3">
           <div class="form-group">
-            <label>Requested Loan Amount (â‚¹) *</label>
+            <label>Requested Loan Amount (₹) *</label>
             <input type="number" id="loanReqAmount" required class="form-control" value="5000000" aria-label="Requested loan amount">
           </div>
           <div class="form-group">
-            <label>Net Monthly In-Hand Income (â‚¹) *</label>
+            <label>Net Monthly In-Hand Income (₹) *</label>
             <input type="number" id="loanMonthlyIncome" required class="form-control" placeholder="e.g. 120000" value="120000">
           </div>
           <div class="form-group">

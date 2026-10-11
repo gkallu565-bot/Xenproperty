@@ -35,6 +35,25 @@ function switchAuthTab(tab) {
   }
 }
 
+/**
+ * Where to send someone once they are signed in.
+ *
+ * Admins go straight to the admin console, where their work is. Everyone else
+ * lands on their profile, which is the page holding their saved properties,
+ * listings and visits. A ?redirect= target is honoured so a guarded page (for
+ * example sell.html) can bounce the visitor here and bring them straight back,
+ * but only for a bare local filename - accepting an absolute URL would turn the
+ * login form into an open redirect.
+ */
+function destinationAfterAuth(user, fallback = 'profile.html') {
+  if (user && user.role === 'admin') return 'admin.html';
+
+  const requested = new URLSearchParams(window.location.search).get('redirect');
+  if (requested && /^[A-Za-z0-9_-]+\.html$/.test(requested)) return requested;
+
+  return fallback;
+}
+
 async function handleLogin(e) {
   e.preventDefault();
 
@@ -56,11 +75,7 @@ async function handleLogin(e) {
   try {
     const res = await api.login(email, password);
     showToast(`Welcome back, ${res.user.full_name}!`, 'success');
-    if (res.user.role === 'admin') {
-      window.location.href = 'admin.html';
-    } else {
-      window.location.href = 'index.html';
-    }
+    window.location.href = destinationAfterAuth(res.user);
   } catch (err) {
     showAuthError(err.message);
     btn.disabled = false;
@@ -109,7 +124,7 @@ async function handleRegister(e) {
   try {
     await api.register({ full_name, email, password, phone, role });
     showToast('Account created successfully! Redirecting...', 'success');
-    window.location.href = 'index.html';
+    window.location.href = destinationAfterAuth(api.getCurrentUser());
   } catch (err) {
     showAuthError(err.message);
     btn.disabled = false;

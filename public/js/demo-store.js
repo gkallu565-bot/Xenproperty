@@ -85,6 +85,7 @@
           },
           added: { users: [], properties: [], inquiries: [], loans: [], designs: [] },
           removedPropertyIds: [],
+          userOverrides: {},
           nextUserId: Math.max(0, ...(data.demoUsers || []).map((u) => u.id)) + 1,
         };
         restore();
@@ -98,6 +99,7 @@
       localStorage.setItem(K_STORE, JSON.stringify({
         added: store.added,
         removedPropertyIds: store.removedPropertyIds,
+        userOverrides: store.userOverrides,
         nextUserId: store.nextUserId,
       }));
     } catch (e) { /* quota - demo still works in-memory */ }
@@ -114,6 +116,9 @@
         if (Array.isArray(saved.added[k])) store.added[k] = saved.added[k];
       });
       if (Array.isArray(saved.removedPropertyIds)) store.removedPropertyIds = saved.removedPropertyIds;
+      if (saved.userOverrides && typeof saved.userOverrides === 'object') {
+        store.userOverrides = saved.userOverrides;
+      }
       if (saved.nextUserId) store.nextUserId = Math.max(store.nextUserId, saved.nextUserId);
     } catch (e) { /* ignore malformed demo state */ }
   }
@@ -124,7 +129,17 @@
 
   /* --------------------------- merged views ------------------------------ */
 
-  const all = (key) => store.base[key].concat(store.added[key]);
+  /**
+   * Seeded users are re-read from seed.json on every page load and never
+   * persisted, so an edit to one has to be replayed as an overlay. Always
+   * returns a fresh object so callers cannot accidentally mutate the snapshot.
+   */
+  const applyUserOverrides = (u) => ({ ...u, ...(store.userOverrides[u.email] || {}) });
+
+  const all = (key) => {
+    const rows = store.base[key].concat(store.added[key]);
+    return key === 'users' ? rows.map(applyUserOverrides) : rows;
+  };
 
   const allProperties = () =>
     store.base.properties
@@ -206,6 +221,81 @@
       const full = await ready().then(() => all('users').find((x) => x.id === u.id));
       if (!full) throw new Error('User not found');
       return { success: true, user: clone(full) };
+    },
+
+    /** Edit the signed-in user's own name and phone - mirrors PATCH /api/auth/me. */
+    async updateMe(details) {
+      const session = requireUser();
+      await ready();
+      const full = all('users').find((x) => x.id === session.id);
+      if (!full) throw new Error('User not found');
+
+      const { full_name, phone } = details || {};
+      if (full_name === undefined && phone === undefined) {
+        throw new Error('There is nothing to update.');
+      }
+
+      const patch = {};
+
+      if (full_name !== undefined) {
+        const name = String(full_name).trim();
+        if (name.length < 2 || name.length > 80) {
+          throw new Error('Your name must be between 2 and 80 characters.');
+        }
+        patch.full_name = name;
+      }
+
+      if (phone !== undefined) {
+        const value = String(phone).trim();
+        if (value !== '') {
+          const digits = value.replace(/\D/g, '');
+          if (digits.length < 7 || digits.length > 15) {
+            throw new Error('Please enter a valid phone number (7 to 15 digits).');
+          }
+        }
+        patch.phone = value;
+      }
+
+      // Record as an overlay so the edit survives a reload (seeded users are
+      // re-read from seed.json each time; accounts created here live in `added`).
+      const inSeed = store.base.users.some((x) => x.email === full.email);
+      if (inSeed) {
+        store.userOverrides[full.email] = { ...(store.userOverrides[full.email] || {}), ...patch };
+      } else {
+        Object.assign(full, patch);
+      }
+      persist();
+
+      // Keep the session copy in step so the navbar shows the new name.
+      const updated = { ...full, ...patch };
+      localStorage.setItem(K_USER, JSON.stringify({
+        ...currentUser(),
+        full_name: updated.full_name,
+      }));
+
+      return { success: true, message: 'Profile updated successfully.', user: clone(updated) };
+    },
+
+    /** Profile page data - mirrors GET /api/me/dashboard. */
+    async getMyDashboard() {
+      const session = requireUser();
+      await ready();
+      const user = all('users').find((x) => x.id === session.id);
+      if (!user) throw new Error('User not found');
+
+      const email = String(user.email).toLowerCase();
+      const mine = (rows) => rows
+        .filter((r) => String(r.email || r.user_email || '').toLowerCase() === email)
+        .sort((a, b) => b.id - a.id);
+
+      return {
+        success: true,
+        user: clone(user),
+        listings: clone(allProperties().filter((p) => Number(p.user_id) === Number(user.id))),
+        inquiries: clone(mine(all('inquiries'))),
+        loans: clone(mine(all('loans'))),
+        designs: clone(mine(all('designs'))),
+      };
     },
 
     logout() {

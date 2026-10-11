@@ -198,6 +198,55 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
   }
 });
 
+app.patch('/api/auth/me', authenticateToken, async (req, res) => {
+  try {
+    const { full_name, phone } = req.body || {};
+
+    // Only these two fields are editable. email, role and the password hash are
+    // never accepted here, so a profile form cannot escalate itself.
+    if (full_name === undefined && phone === undefined) {
+      return res.status(400).json({ success: false, message: 'There is nothing to update.' });
+    }
+
+    if (full_name !== undefined) {
+      const name = String(full_name).trim();
+      if (name.length < 2 || name.length > 80) {
+        return res.status(400).json({
+          success: false,
+          message: 'Your name must be between 2 and 80 characters.',
+        });
+      }
+    }
+
+    if (phone !== undefined && String(phone).trim() !== '') {
+      const digits = String(phone).replace(/\D/g, '');
+      if (digits.length < 7 || digits.length > 15) {
+        return res.status(400).json({
+          success: false,
+          message: 'Please enter a valid phone number (7 to 15 digits).',
+        });
+      }
+    }
+
+    const result = await store.updateUser(req.user.id, { full_name, phone });
+
+    // No rows changed means the account no longer exists - the token is valid
+    // but the user behind it was deleted.
+    if (!result.changes) {
+      const stillThere = await store.findUserById(req.user.id);
+      if (!stillThere) {
+        return res.status(404).json({ success: false, message: 'User not found.' });
+      }
+    }
+
+    const user = await store.findUserById(req.user.id);
+    res.json({ success: true, message: 'Profile updated successfully.', user });
+  } catch (err) {
+    console.error('Profile update error:', err);
+    res.status(500).json({ success: false, message: 'Server error updating your profile.' });
+  }
+});
+
 /* ==========================================================================
    PROPERTIES ROUTES
    ========================================================================== */
@@ -818,6 +867,46 @@ app.get('/api/admin/stats', authenticateToken, requireAdmin, async (req, res) =>
     });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error loading admin stats.' });
+  }
+});
+
+/* ==========================================================================
+   PROFILE DASHBOARD
+   ========================================================================== */
+
+/**
+ * Everything the "My Profile" page shows, in one request.
+ *
+ * Scoped to the signed-in user: listings by user_id, and visits / loans /
+ * design requests by email. The admin-only list endpoints stay admin-only -
+ * this is the visitor's own view of their own records.
+ */
+app.get('/api/me/dashboard', authenticateToken, async (req, res) => {
+  try {
+    const user = await store.findUserById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    const email = user.email;
+    const [listings, inquiries, loans, designs] = await Promise.all([
+      store.listPropertiesByUser(req.user.id),
+      store.listInquiriesByEmail(email),
+      store.listLoansByEmail(email),
+      store.listDesignRequestsByEmail(email),
+    ]);
+
+    res.json({
+      success: true,
+      user,
+      listings: listings.map(formatProperty),
+      inquiries,
+      loans,
+      designs,
+    });
+  } catch (err) {
+    console.error('Profile dashboard error:', err);
+    res.status(500).json({ success: false, message: 'Error loading your profile.' });
   }
 });
 

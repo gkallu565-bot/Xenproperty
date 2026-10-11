@@ -19,9 +19,6 @@ firebase-debug.log
 firebase-debug.*.log
 
 # Temp logs
-_*.log
-_*.err
-qa-srv.log
-qa-srv.err
 *.log
+*.err
 !npm-debug.log*

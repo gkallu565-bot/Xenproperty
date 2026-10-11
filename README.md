@@ -104,9 +104,38 @@ You can log in with the following pre-configured demo accounts or register your 
 
 11. **Login & Register (`login.html`)**:
     - Clean dual tab auth with 1-click demo login buttons.
+    - Signing in opens your profile page. Admins are sent to the admin portal instead.
 
-12. **Admin Portal (`admin.html`)**:
+12. **My Profile (`profile.html`)**:
+    - Your account details, saved properties, your own listings, site visits, loan applications and design requests — in one place.
+    - Click the name badge in the navbar at any time to open it.
+    - Edit your name and phone number in place. Email and role cannot be changed here.
+
+13. **Admin Portal (`admin.html`)**:
     - Real-time platform KPI metrics, property management (view/delete), customer leads, and loan applications.
+
+---
+
+## 🧪 Testing
+
+```bash
+npm start            # terminal 1 - the app on http://localhost:3000
+npm test             # 165 API/data assertions against the running server
+npm run test:e2e     # Playwright in a headed browser (watch it run)
+npm run test:e2e:demo  # same flows against the in-browser demo backend
+```
+
+The E2E suites drive a real Chromium: signing in, the profile page, editing
+details, price sorting, the EMI calculator and small-screen layout. Both accept
+`--headless` for CI. First run only:
+
+```bash
+npx playwright install chromium
+```
+
+`npm run check:encoding` scans the source for text that was once saved as
+Windows-1252 and reports where a ₹, — or • got mangled. `npm run fix:encoding`
+repairs it.
 
 ---
 

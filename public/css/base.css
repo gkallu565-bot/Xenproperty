@@ -285,7 +285,30 @@ button, input, select, textarea {
   font-size: 0.85rem;
   padding: 6px 14px;
   border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
+
+.user-badge-nav:hover,
+.user-badge-nav:focus-visible {
+  background: #d5ece3;
+  box-shadow: 0 3px 10px rgba(11, 59, 46, 0.14);
+}
+
+/* Small "Admin" shortcut kept outside the profile link so the two anchors
+   never nest, which browsers silently break. */
+.user-badge-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #ea580c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.user-badge-admin:hover { text-decoration: underline; }
 
 .mobile-menu-toggle {
   display: none;

@@ -27,11 +27,14 @@ function initAuthUI() {
   if (user) {
     authContainer.innerHTML = `
       ${favBtnHtml}
-      <div class="user-badge-nav">
+      <a href="profile.html" class="user-badge-nav" title="View my full profile"
+         aria-label="View my full profile">
         <i class="fa-solid fa-user-circle"></i>
         <span>${escapeHtml(user.full_name.split(' ')[0])}</span>
-        ${user.role === 'admin' ? '<a href="admin.html" style="margin-left:6px; color:#ea580c; font-size:0.75rem;"><i class="fa-solid fa-shield"></i> Admin</a>' : ''}
-      </div>
+      </a>
+      ${user.role === 'admin'
+        ? '<a href="admin.html" class="user-badge-admin"><i class="fa-solid fa-shield"></i> Admin</a>'
+        : ''}
       <button onclick="handleLogout()" class="btn-auth-login" style="padding:6px 12px; font-size:0.8rem; cursor:pointer;">Logout</button>
       <a href="sell.html" class="btn-list-prop">
         <i class="fa-solid fa-plus"></i> List Property

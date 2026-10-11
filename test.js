@@ -117,7 +117,7 @@ async function testPagesAndAssets() {
   const pages = [
     '/', '/index.html', '/buy.html', '/rent.html', '/sell.html', '/design.html',
     '/house-plans.html', '/loans.html', '/services.html', '/about.html',
-    '/contact.html', '/login.html', '/admin.html',
+    '/contact.html', '/login.html', '/admin.html', '/profile.html',
   ];
   for (const p of pages) {
     const r = await get(p);
@@ -126,6 +126,7 @@ async function testPagesAndAssets() {
   const assets = ['/css/style.css', '/css/base.css', '/css/pages.css', '/css/modal.css',
     '/css/components.css', '/css/hero.css', '/css/sections.css',
     '/js/api.js', '/js/main.js', '/js/auth.js', '/js/matcher.js', '/js/demo-store.js',
+    '/js/profile.js',
     '/data/seed.json', '/images/logo.png'];
   for (const a of assets) {
     const r = await get(a);
@@ -263,6 +264,101 @@ async function testAuth() {
   check('new normal user cannot read inquiries -> 403', forbiddenInq.status, 403);
 
   return { adminToken: admin.body.token, userToken: user.body.token, testEmail: email };
+}
+
+/**
+ * Profile endpoints: the dashboard the profile page reads, and the self-service
+ * update route.
+ *
+ * Anything this changes on the seeded user is put back before the suite ends,
+ * so the database is left exactly as found.
+ */
+async function testProfile(userToken, adminToken) {
+  suite('G. Profile');
+
+  const original = await get('/api/auth/me', { token: userToken });
+  check('GET /api/auth/me -> 200', original.status, 200);
+  const startName = original.body.user.full_name;
+  const startPhone = original.body.user.phone;
+
+  // --- access control ---
+  const anon = await get('/api/me/dashboard');
+  check('dashboard without a token -> 401', anon.status, 401);
+  const bogus = await get('/api/me/dashboard', { token: 'not-a-real-token' });
+  checkThat('dashboard with an invalid token -> 4xx', bogus.status >= 400 && bogus.status < 500,
+    `got ${bogus.status}`);
+  const anonPatch = await patch('/api/auth/me', { full_name: 'Nobody' });
+  check('profile update without a token -> 401', anonPatch.status, 401);
+
+  // --- payload shape ---
+  const dash = await get('/api/me/dashboard', { token: userToken });
+  check('GET /api/me/dashboard -> 200', dash.status, 200);
+  checkThat('dashboard returns the user', !!dash.body.user && !!dash.body.user.email);
+  for (const list of ['listings', 'inquiries', 'loans', 'designs']) {
+    checkThat(`dashboard.${list} is an array`, Array.isArray(dash.body[list]), `got ${typeof dash.body[list]}`);
+  }
+
+  // --- scoping: nobody sees another account's rows ---
+  const me = dash.body.user;
+  checkThat('listings belong to the signed-in user',
+    dash.body.listings.every((p) => Number(p.user_id) === Number(me.id)),
+    'a listing owned by someone else was returned');
+  checkThat('inquiries belong to the signed-in user',
+    dash.body.inquiries.every((i) => String(i.user_email).toLowerCase() === String(me.email).toLowerCase()),
+    'an inquiry belonging to someone else was returned');
+  checkThat('loans belong to the signed-in user',
+    dash.body.loans.every((l) => String(l.email).toLowerCase() === String(me.email).toLowerCase()),
+    'a loan belonging to someone else was returned');
+  checkThat('designs belong to the signed-in user',
+    dash.body.designs.every((d) => String(d.email).toLowerCase() === String(me.email).toLowerCase()),
+    'a design request belonging to someone else was returned');
+
+  // The admin's dashboard must not expose the normal user's rows either.
+  const adminDash = await get('/api/me/dashboard', { token: adminToken });
+  check('admin dashboard -> 200', adminDash.status, 200);
+  checkThat('admin dashboard is scoped to the admin',
+    adminDash.body.inquiries.every((i) => String(i.user_email).toLowerCase() === String(adminDash.body.user.email).toLowerCase()),
+    'the admin dashboard leaked another account\'s inquiries');
+  checkThat('admin dashboard does not list the normal user\'s listings',
+    !adminDash.body.listings.some((p) => dash.body.listings.some((q) => q.id === p.id)),
+    'the admin dashboard showed another account\'s listings');
+
+  // --- update: validation ---
+  check('update with nothing to change -> 400',
+    (await patch('/api/auth/me', {}, { token: userToken })).status, 400);
+  check('update with a 1-character name -> 400',
+    (await patch('/api/auth/me', { full_name: 'R' }, { token: userToken })).status, 400);
+  check('update with an over-long name -> 400',
+    (await patch('/api/auth/me', { full_name: 'x'.repeat(200) }, { token: userToken })).status, 400);
+  check('update with a 2-digit phone -> 400',
+    (await patch('/api/auth/me', { phone: '12' }, { token: userToken })).status, 400);
+
+  // --- update: happy path, then restore ---
+  const renamed = `QA Renamed ${Date.now().toString().slice(-6)}`;
+  const changed = await patch('/api/auth/me',
+    { full_name: renamed, phone: '+91 90000 12345' }, { token: userToken });
+  check('profile update -> 200', changed.status, 200);
+  check('the new name is returned', changed.body.user.full_name, renamed);
+  check('the new phone is returned', changed.body.user.phone, '+91 90000 12345');
+
+  const reread = await get('/api/auth/me', { token: userToken });
+  check('the change is persisted', reread.body.user.full_name, renamed);
+  checkThat('the update response never contains a password hash',
+    !JSON.stringify(changed.body).includes('password_hash'));
+
+  // --- update: privilege escalation must be ignored ---
+  const escalate = await patch('/api/auth/me',
+    { full_name: renamed, role: 'admin', email: 'attacker@evil.example' }, { token: userToken });
+  check('escalation attempt still returns 200', escalate.status, 200);
+  check('role is NOT escalated', escalate.body.user.role, me.role);
+  check('email is NOT changeable', escalate.body.user.email, me.email);
+
+  // --- restore the seeded user exactly as it was ---
+  const restored = await patch('/api/auth/me',
+    { full_name: startName, phone: startPhone }, { token: userToken });
+  check('the account is restored', restored.body.user.full_name, startName);
+  check('the phone is restored', restored.body.user.phone, startPhone);
+  checkThat('restoring did not change the role', restored.body.user.role === me.role);
 }
 
 async function testAuthorization(adminToken, userToken) {
@@ -485,6 +581,7 @@ async function main() {
     await testPublicApi();
     const auth = await testAuth();
     await testAuthorization(auth.adminToken, auth.userToken);
+    await testProfile(auth.userToken, auth.adminToken);
     await testWritePaths(auth.adminToken);
     await testDataIntegrity(auth.adminToken);
     await cleanup(auth.adminToken);

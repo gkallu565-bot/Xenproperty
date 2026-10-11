@@ -109,15 +109,15 @@
         <div class="form-group">
           <label>Style Package</label>
           <select id="estPackageSelect" class="form-control" onchange="updateDesignEstimate()" aria-label="Design package">
-            <option value="1200">Modern Minimalist (â‚¹1,200 / sq.ft)</option>
-            <option value="1800" selected>Premium Contemporary (â‚¹1,800 / sq.ft)</option>
-            <option value="2600">Ultra Luxury Italian (â‚¹2,600 / sq.ft)</option>
+            <option value="1200">Modern Minimalist (₹1,200 / sq.ft)</option>
+            <option value="1800" selected>Premium Contemporary (₹1,800 / sq.ft)</option>
+            <option value="2600">Ultra Luxury Italian (₹2,600 / sq.ft)</option>
           </select>
         </div>
 
         <div style="background:#f1f7f4; border-radius:12px; padding:20px; text-align:center; margin-top:20px; border:1px solid #c9e4d7;">
           <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Estimated Execution Budget</div>
-          <div id="estTotalDisplay" style="font-size:2rem; font-weight:800; color:var(--primary); margin:6px 0;">â‚¹25.2 Lakh</div>
+          <div id="estTotalDisplay" style="font-size:2rem; font-weight:800; color:var(--primary); margin:6px 0;">₹25.2 Lakh</div>
           <p style="font-size:0.75rem; color:#6b7280;">Includes 3D renders, working drawings, materials, and turnkey contractor supervision.</p>
         </div>
       </div>
@@ -188,9 +188,9 @@
       document.getElementById('areaValDisplay').innerText = `${area.toLocaleString()} sq.ft`;
       const total = area * rate;
       if (total >= 10000000) {
-        document.getElementById('estTotalDisplay').innerText = `â‚¹${(total / 10000000).toFixed(2)} Cr`;
+        document.getElementById('estTotalDisplay').innerText = `₹${(total / 10000000).toFixed(2)} Cr`;
       } else {
-        document.getElementById('estTotalDisplay').innerText = `â‚¹${(total / 100000).toFixed(1)} Lakh`;
+        document.getElementById('estTotalDisplay').innerText = `₹${(total / 100000).toFixed(1)} Lakh`;
       }
     }
 
