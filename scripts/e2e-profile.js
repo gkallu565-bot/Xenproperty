@@ -13,6 +13,9 @@ const BASE = process.env.BASE_URL || 'http://localhost:3000';
 const HEADED = !process.argv.includes('--headless');
 const USER = { email: 'rahul@xenproperty.com', password: 'user123' };
 
+/** Tolerates Firebase cleanUrls, which serves /profile rather than /profile.html. */
+const PROFILE_URL = /profile(\.html)?($|[?#])/;
+
 let pass = 0;
 const failures = [];
 
@@ -54,10 +57,10 @@ const MOJIBAKE = /[\u00C2-\u00F4][\u0080-\u00BF\u2013\u2014\u2018\u2019\u201C\u2
     await page.fill('#loginEmail', USER.email);
     await page.fill('#loginPassword', USER.password);
     await Promise.all([
-      page.waitForURL(/profile\.html/, { timeout: 15000 }),
+      page.waitForURL(PROFILE_URL , { timeout: 15000 }),
       page.click('#loginSubmitBtn'),
     ]);
-    check('signing in lands on profile.html', /profile\.html/.test(page.url()), page.url());
+    check('signing in lands on profile.html', PROFILE_URL.test(page.url()), page.url());
 
     await page.waitForSelector('#profileSignedIn:not([style*="none"])', { timeout: 10000 }).catch(() => {});
     const signedIn = await page.evaluate(
@@ -79,10 +82,10 @@ const MOJIBAKE = /[\u00C2-\u00F4][\u0080-\u00BF\u2013\u2014\u2018\u2019\u201C\u2
     check('the navbar badge has an accessible name', !!badge.label, `aria-label=${badge.label}`);
 
     await Promise.all([
-      page.waitForURL(/profile\.html/, { timeout: 15000 }),
+      page.waitForURL(PROFILE_URL , { timeout: 15000 }),
       page.click('.user-badge-nav'),
     ]);
-    check('clicking the badge opens the full profile', /profile\.html/.test(page.url()), page.url());
+    check('clicking the badge opens the full profile', PROFILE_URL.test(page.url()), page.url());
 
     /* ------------------------------------------------------------------ */
     section('3. Profile shows the right account');

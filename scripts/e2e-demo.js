@@ -7,17 +7,23 @@
  *
  *   node scripts/e2e-demo.js                headed (default)
  *   node scripts/e2e-demo.js --headless
+ *   BASE_URL=https://your-deploy.web.app node scripts/e2e-demo.js
  *
- * Starts scripts/static-server.js itself.
+ * Starts scripts/static-server.js itself, unless BASE_URL points somewhere
+ * else - that is how you run the same checks against a live deploy.
  */
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const PORT = 3100;
-const BASE = `http://localhost:${PORT}`;
+const EXTERNAL = !!process.env.BASE_URL;
+const PORT = Number(process.env.PORT || 3100);
+const BASE = process.env.BASE_URL || `http://localhost:${PORT}`;
 const HEADED = !process.argv.includes('--headless');
 const USER = { email: 'rahul@xenproperty.com', password: 'user123' };
+
+/** Tolerates Firebase cleanUrls, which serves /profile rather than /profile.html. */
+const PROFILE_URL = /profile(\.html)?($|[?#])/;
 
 let pass = 0;
 const failures = [];
@@ -39,11 +45,15 @@ function section(title) {
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 (async () => {
-  const server = spawn(process.execPath, [path.join(__dirname, 'static-server.js')], {
-    env: { ...process.env, PORT: String(PORT) },
-    stdio: 'ignore',
-  });
-  await wait(900);
+  let server = null;
+  if (!EXTERNAL) {
+    server = spawn(process.execPath, [path.join(__dirname, 'static-server.js')], {
+      env: { ...process.env, PORT: String(PORT) },
+      stdio: 'ignore',
+    });
+    await wait(900);
+  }
+  console.log(`\n  target: ${BASE}${EXTERNAL ? '  (live deploy)' : '  (local static server)'}`);
 
   const browser = await chromium.launch({ headless: !HEADED, slowMo: HEADED ? 110 : 0 });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -79,10 +89,10 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     await page.fill('#loginEmail', USER.email);
     await page.fill('#loginPassword', USER.password);
     await Promise.all([
-      page.waitForURL(/profile\.html/, { timeout: 15000 }),
+      page.waitForURL(PROFILE_URL , { timeout: 15000 }),
       page.click('#loginSubmitBtn'),
     ]);
-    check('demo sign-in lands on profile.html', /profile\.html/.test(page.url()), page.url());
+    check('demo sign-in lands on profile.html', PROFILE_URL.test(page.url()), page.url());
 
     await page.waitForFunction(
       () => getComputedStyle(document.getElementById('profileSignedIn')).display !== 'none',
@@ -230,7 +240,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     failures.push(`run aborted: ${err.message}`);
   } finally {
     await browser.close();
-    server.kill();
+    if (server) server.kill();
   }
 
   process.exitCode = failures.length ? 1 : 0;
