@@ -1,6 +1,6 @@
 # XenProperty — Firebase Deployment Guide
 
-Status: **code complete and tested. Not yet deployed.**
+Status: **backend code complete and tested. Hosting is deployed; Cloud Functions remain blocked until Blaze is enabled.**
 Blocked on: Firebase **Blaze** plan (required for Cloud Functions, Secret Manager, Storage).
 
 ---
@@ -17,11 +17,13 @@ Blocked on: Firebase **Blaze** plan (required for Cloud Functions, Secret Manage
 | Firestore data layer (`lib/store.firestore.js`) tested on emulator | ✅ |
 | SQLite → Firestore migration script written + tested | ✅ |
 | Hosting rewrite config (`/api/**` → function) written | ✅ |
-| Cloud Function entry point (`index.js`) written | ✅ |
+| Cloud Function entry point (`index.js`) written and function-export tested | ✅ |
+| Production Function uses Firestore + Secret Manager + asia-south1 | ✅ |
+| Health endpoint + JSON API 404/error contract | ✅ |
 
 ## What is blocked
 
-`firebase deploy` fails with:
+`firebase deploy --only functions` is blocked with:
 
 ```
 Your project xenproperty-5944b must be on the Blaze (pay-as-you-go) plan

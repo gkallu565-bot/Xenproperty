@@ -121,10 +121,31 @@ You can log in with the following pre-configured demo accounts or register your 
 
 ```bash
 npm start            # terminal 1 - the app on http://localhost:3000
-npm test             # 165 API/data assertions against the running server
+npm test             # 171 API/data assertions against the running server
 npm run test:e2e     # Playwright in a headed browser (watch it run)
 npm run test:e2e:demo  # same flows against the in-browser demo backend
 npm run test:e2e:navbar  # the navbar sign-in / registration flow
+```
+
+### Backend API
+
+The Express backend is shared by local development and Firebase Functions:
+
+- `POST /api/auth/register`, `POST /api/auth/login`, `GET/PATCH /api/auth/me`
+- `GET /api/me/dashboard`
+- `GET /api/properties`, `GET /api/properties/:id`, `POST /api/properties`
+- `POST /api/inquiries`, admin inquiry/loan/design management routes
+- `POST /api/loans/apply`, `POST /api/design/request`, `POST /api/ai/chat`
+- `GET /api/health`
+
+Local mode uses SQLite. The Firebase Function entrypoint (`index.js`) selects
+Firestore, injects the JWT secret from Secret Manager, uses `asia-south1`, and
+does not open a local listening socket inside the function runtime. Set the
+secret before deploying:
+
+```bash
+firebase functions:secrets:set xenproperty_jwt
+firebase deploy --only functions,hosting
 ```
 
 The E2E suites drive a real Chromium: signing in, the profile page, editing

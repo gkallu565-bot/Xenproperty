@@ -15,7 +15,10 @@ const PORT = process.env.PORT || 3000;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' || Boolean(process.env.K_SERVICE);
 const IS_FIRESTORE = (process.env.DB_PROVIDER || 'sqlite').toLowerCase() === 'firestore';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'xenproperty_super_secret_jwt_key_2026';
+// Firebase Secret Manager injects the secret using the secret's name. Support
+// both the configured lowercase name and the conventional uppercase variant,
+// while retaining JWT_SECRET for local/CI environments.
+const JWT_SECRET = process.env.JWT_SECRET || process.env.xenproperty_jwt || process.env.XENPROPERTY_JWT || 'xenproperty_super_secret_jwt_key_2026';
 if (IS_PRODUCTION && !process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable must be set in production. Refusing to start with the default secret.');
 }
@@ -28,13 +31,28 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
 
 app.use(
   cors({
-    origin: IS_PRODUCTION ? ALLOWED_ORIGINS : true,
+    // The cors package expects a single value/function here; passing the
+    // allowlist array directly is not a reliable production configuration.
+    // Same-origin requests and server-to-server calls have no Origin header
+    // and must remain allowed.
+    origin: IS_PRODUCTION
+      ? (origin, callback) => {
+          if (!origin || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+          return callback(new Error('Origin is not allowed by XenProperty CORS policy.'));
+        }
+      : true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Lightweight health endpoint for Firebase/uptime checks. It deliberately
+// does not expose database contents or configuration secrets.
+app.get('/api/health', (req, res) => {
+  res.json({ success: true, service: 'xenproperty-api', status: 'ok' });
+});
 
 // Images are held in memory then persisted by lib/storage.js
 // (local disk in dev, Cloud Storage in production).
@@ -118,7 +136,18 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please fill all required fields.' });
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
+    const cleanName = String(full_name).trim();
+    const normalizedEmail = String(email).toLowerCase().trim();
+    if (cleanName.length < 2 || cleanName.length > 80) {
+      return res.status(400).json({ success: false, message: 'Name must be between 2 and 80 characters.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(normalizedEmail)) {
+      return res.status(400).json({ success: false, message: 'Please provide a valid email address.' });
+    }
+    if (String(password).length < 6 || String(password).length > 128) {
+      return res.status(400).json({ success: false, message: 'Password must be between 6 and 128 characters.' });
+    }
+
     const existingUser = await store.findUserByEmail(normalizedEmail);
     if (existingUser) {
       return res.status(409).json({ success: false, message: 'An account with this email already exists.' });
@@ -129,14 +158,14 @@ app.post('/api/auth/register', async (req, res) => {
     const assignedRole = role === 'agent' ? 'agent' : 'user';
 
     const { id } = await store.createUser({
-      full_name: full_name.trim(),
+      full_name: cleanName,
       email: normalizedEmail,
       password_hash: passwordHash,
       phone: phone || '',
       role: assignedRole,
     });
 
-    const user = { id, full_name: full_name.trim(), email: normalizedEmail, role: assignedRole };
+    const user = { id, full_name: cleanName, email: normalizedEmail, role: assignedRole };
     const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({
@@ -910,6 +939,26 @@ app.get('/api/me/dashboard', authenticateToken, async (req, res) => {
   }
 });
 
+// Convert upload/parser failures into the same JSON contract as every other
+// API failure. Express otherwise emits an HTML error page for multer errors.
+app.use((err, req, res, next) => {
+  if (!req.path.startsWith('/api')) return next(err);
+  if (err && err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ success: false, message: 'Image must be 10MB or smaller.' });
+  }
+  if (err && err.message && /image|file|upload/i.test(err.message)) {
+    return res.status(400).json({ success: false, message: err.message });
+  }
+  console.error('Unhandled API error:', err);
+  return res.status(500).json({ success: false, message: 'Unexpected server error.' });
+});
+
+// Unknown API paths must remain JSON. Without this guard they fall through to
+// the SPA index.html, which makes a missing backend route look like a 200.
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, message: 'API route not found.' });
+});
+
 // Single Page application / fallback routing
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -922,6 +971,7 @@ app.use((req, res) => {
 // Firestore needs no local schema creation; SQLite needs its tables + seed data.
 // database.js (and the native sqlite3 module) is only loaded on the SQLite path
 // so production deploys never pull it in.
+if (require.main === module || process.env.BOOT_SERVER === '1') {
 if (!IS_FIRESTORE) {
   const { initDatabase } = require('./database');
   initDatabase()
@@ -944,6 +994,7 @@ if (!IS_FIRESTORE) {
     console.log(' Storage provider: Firestore');
     console.log('====================================================');
   });
+}
 }
 
 module.exports = app;

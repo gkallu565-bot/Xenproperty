@@ -141,6 +141,14 @@ async function testPagesAndAssets() {
 async function testPublicApi() {
   suite('B. Public read API');
 
+  const health = await get('/api/health');
+  check('GET /api/health -> 200', health.status, 200);
+  checkThat('health response is safe and useful', health.body.success === true && health.body.status === 'ok');
+  const missingRoute = await get('/api/route-that-does-not-exist');
+  check('unknown API route -> JSON 404', missingRoute.status, 404);
+  checkThat('unknown API route does not return the SPA HTML',
+    missingRoute.headers['content-type']?.includes('application/json') && missingRoute.body.success === false);
+
   const all = await get('/api/properties');
   check('GET /api/properties -> 200', all.status, 200);
   checkThat('has count + data', typeof all.body.count === 'number' && Array.isArray(all.body.data));
@@ -233,6 +241,14 @@ async function testAuth() {
   suite('F. Registration');
   const missingFields = await post('/api/auth/register', { email: 'x@y.com' });
   check('register missing fields -> 400', missingFields.status, 400);
+  const weakPassword = await post('/api/auth/register', {
+    full_name: 'QA Weak Password', email: `weak-${TEST_TAG}`, password: '123',
+  });
+  check('register weak password -> 400', weakPassword.status, 400);
+  const badRegistrationEmail = await post('/api/auth/register', {
+    full_name: 'QA Bad Email', email: 'not-an-email', password: 'QaPass123',
+  });
+  check('register malformed email -> 400', badRegistrationEmail.status, 400);
 
   const email = TEST_TAG;
   const reg = await post('/api/auth/register', {
