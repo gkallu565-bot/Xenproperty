@@ -198,7 +198,7 @@ async function loadProperties() {
               </div>
               <h3 class="market-card-title">${escapeHtml(p.title)}</h3>
               <p style="font-size:0.8rem; color:#6b7280; margin-top:2px;">
-                <i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> ${escapeHtml(p.address)}
+                <i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> ${escapeHtml(p.address)}${p.pincode ? ` · ${escapeHtml(p.pincode)}` : ''}
               </p>
             </div>
 

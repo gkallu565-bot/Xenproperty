@@ -351,7 +351,19 @@
         ? amenityRaw
         : String(amenityRaw).split(',').map((s) => s.trim()).filter(Boolean);
 
-      const imageUrl = get('image_url') ||
+      let imageUrl = get('image_url') || '';
+      const imageFile = get('image');
+      // The demo backend has no Storage bucket, so keep an uploaded photo
+      // usable in the browser by converting it to a local data URL.
+      if (!imageUrl && imageFile && imageFile.size && typeof FileReader !== 'undefined') {
+        imageUrl = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ''));
+          reader.onerror = () => resolve('');
+          reader.readAsDataURL(imageFile);
+        });
+      }
+      imageUrl = imageUrl ||
         'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
 
       const prop = {
