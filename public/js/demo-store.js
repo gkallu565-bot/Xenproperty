@@ -365,6 +365,7 @@
         city: String(get('city') || '').trim(),
         state: get('state') || 'India',
         address: get('address') || get('city'),
+        pincode: String(get('pincode') || '').trim(),
         beds: Number(get('beds')) || 0,
         baths: Number(get('baths')) || 0,
         area_sqft: Number(get('area_sqft')) || 1000,

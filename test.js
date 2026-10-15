@@ -396,7 +396,10 @@ async function testAuthorization(adminToken, userToken) {
   const noRoleCreate = await post('/api/properties', { title: 'No Auth', listing_type: 'buy', price: 1, city: 'X' });
   check('create property without auth -> 401', noRoleCreate.status, 401);
 
-  const userCreate = await post('/api/properties', { title: 'User Attempt', listing_type: 'buy', price: 1000000, city: 'Pune' }, { token: userToken });
+  const userCreate = await post('/api/properties', {
+    title: 'User Attempt', listing_type: 'buy', price: 1000000, city: 'Pune',
+    address: 'QA Test Address', pincode: '411001',
+  }, { token: userToken });
   checkThat('normal user CAN create a listing -> 201', userCreate.status === 201, `got ${userCreate.status}`);
   if (userCreate.body.propertyId) created.properties.push(userCreate.body.propertyId);
 

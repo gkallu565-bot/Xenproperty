@@ -34,6 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // A photo can be uploaded as a file or supplied as a direct URL. The
+    // browser's `required` attribute cannot express that either/or rule.
+    const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+    const hasUrl = urlInput && urlInput.value.trim() !== '';
+    if (!hasFile && !hasUrl) {
+      showToast('Please upload a property photo or paste an image URL.', 'error');
+      return;
+    }
+
+    const pincode = form.elements.pincode ? form.elements.pincode.value.trim() : '';
+    if (!/^\d{6}$/.test(pincode)) {
+      showToast('Please enter a valid 6-digit pincode.', 'error');
+      return;
+    }
+
     // Publishing a listing requires an account - send them to login and back.
     if (!api.getToken()) {
       showToast('Please sign in to publish your property listing.', 'error');

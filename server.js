@@ -372,11 +372,14 @@ app.post('/api/properties', authenticateToken, upload.single('image'), async (re
   try {
     const {
       title, listing_type, property_type, price, city, state, address,
-      beds, baths, area_sqft, description, amenities, furnishing, image_url
+      pincode, beds, baths, area_sqft, description, amenities, furnishing, image_url
     } = req.body;
 
-    if (!title || !listing_type || !price || !city) {
-      return res.status(400).json({ success: false, message: 'Please provide required property details.' });
+    if (!title || !listing_type || !price || !city || !address || !pincode) {
+      return res.status(400).json({ success: false, message: 'Please provide photo, address, pincode and price.' });
+    }
+    if (!/^\d{6}$/.test(String(pincode).trim())) {
+      return res.status(400).json({ success: false, message: 'Pincode must be exactly 6 digits.' });
     }
 
     const imageError = validateImage(req.file);
@@ -440,6 +443,7 @@ app.post('/api/properties', authenticateToken, upload.single('image'), async (re
       city: String(city).trim(),
       state: state || 'India',
       address: address || city,
+      pincode: String(pincode || '').trim(),
       beds: Number(beds) || 0,
       baths: Number(baths) || 0,
       area_sqft: Number(area_sqft) || 1000,

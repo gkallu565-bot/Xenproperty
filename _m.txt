@@ -1,0 +1,15 @@
+Simplify property listing to photo, address, pincode and price
+
+- Replaced the long property submission wizard with four visitor-facing
+  fields: property photo (file or URL), complete address, six-digit pincode,
+  and price.
+- Removed purpose, category, title, city/state, BHK, bathrooms, area,
+  furnishing, amenities and description inputs from the form.
+- Existing API compatibility is preserved through hidden internal defaults.
+- Added pincode storage to SQLite with a non-destructive migration; Firestore
+  stores it naturally with the property document.
+- API now validates address and exactly six pincode digits for new listings.
+- Demo and real listing flows both verified.
+
+Verified: npm test 171/171, minimal form browser submission succeeds, and the
+original database baseline remains intact.

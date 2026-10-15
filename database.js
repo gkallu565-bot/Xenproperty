@@ -81,6 +81,13 @@ async function initDatabase() {
     )
   `);
 
+  // Added after the first schema version. Keep existing local databases
+  // usable without a destructive migration.
+  const propertyColumns = await dbAll('PRAGMA table_info(properties)');
+  if (!propertyColumns.some((column) => column.name === 'pincode')) {
+    await dbRun('ALTER TABLE properties ADD COLUMN pincode TEXT DEFAULT \'\'');
+  }
+
   await dbRun(`
     CREATE TABLE IF NOT EXISTS inquiries (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
