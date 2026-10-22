@@ -21,10 +21,14 @@
         <li><a href="buy.html" class="nav-link">Buy</a></li>
         <li><a href="rent.html" class="nav-link">Rent</a></li>
         <li><a href="sell.html" class="nav-link">Sell</a></li>
-        <li><a href="design.html" class="nav-link">Design</a></li>
-        <li><a href="house-plans.html" class="nav-link">House Plans</a></li>
-        <li><a href="loans.html" class="nav-link active">Home Loans</a></li>
-        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li class="nav-dropdown">
+          <a href="services.html" class="nav-link" aria-haspopup="true">Services <i class="fa-solid fa-chevron-down nav-dropdown-icon" aria-hidden="true"></i></a>
+          <ul class="nav-dropdown-menu" aria-label="Services options">
+            <li><a href="design.html">Design</a></li>
+            <li><a href="house-plans.html">House Plans</a></li>
+            <li><a href="loans.html">Home Loans</a></li>
+          </ul>
+        </li>
       </ul>
       <div class="nav-actions" id="navbarAuthArea">
         <a href="sell.html" class="btn-list-prop" onclick="goListProperty(event)"><i class="fa-solid fa-plus"></i> List Property</a>
