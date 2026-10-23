@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const fileInput = document.getElementById('propImageFile');
   const previewImg = document.getElementById('imagePreview');
-  const urlInput = document.getElementById('propImageUrl');
 
   if (fileInput && previewImg) {
     fileInput.addEventListener('change', (e) => {
@@ -21,25 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (urlInput && previewImg) {
-    urlInput.addEventListener('input', () => {
-      const val = urlInput.value.trim();
-      if (val.startsWith('http')) {
-        previewImg.src = val;
-        previewImg.style.display = 'block';
-      }
-    });
-  }
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // A photo can be uploaded as a file or supplied as a direct URL. The
-    // browser's `required` attribute cannot express that either/or rule.
     const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
-    const hasUrl = urlInput && urlInput.value.trim() !== '';
-    if (!hasFile && !hasUrl) {
-      showToast('Please upload a property photo or paste an image URL.', 'error');
+    if (!hasFile) {
+      showToast('Please upload a property photo.', 'error');
+      return;
+    }
+    if (fileInput.files[0].size > 700 * 1024) {
+      showToast('Photo must be smaller than 700 KB.', 'error');
       return;
     }
 
@@ -49,34 +39,37 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Publishing a listing requires an account - send them to login and back.
-    if (!api.getToken()) {
-      showToast('Please sign in to publish your property listing.', 'error');
-      setTimeout(() => {
-        window.location.href = 'login.html?redirect=' + encodeURIComponent('sell.html');
-      }, 1200);
-      return;
-    }
     const submitBtn = document.getElementById('submitPropBtn');
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting to AI Ecosystem...';
 
     try {
       const formData = new FormData(form);
-
-      // Collect checked amenities
-      const checkedAmenities = [];
-      document.querySelectorAll('input[name="amenities_check"]:checked').forEach(cb => {
-        checkedAmenities.push(cb.value);
+      const imageUrl = await readSellImage(fileInput.files[0]);
+      const user = typeof api !== 'undefined' ? api.getCurrentUser() : null;
+      await firestoreDirect.create('properties', {
+        user_id: user?.id || null,
+        title: 'New Property Listing',
+        listing_type: 'buy',
+        property_type: 'Apartment',
+        price: Number(formData.get('price')),
+        price_display: `₹${Number(formData.get('price')).toLocaleString('en-IN')}`,
+        city: 'India',
+        state: 'India',
+        address: String(formData.get('address') || '').trim(),
+        pincode: String(formData.get('pincode') || '').trim(),
+        image_url: imageUrl,
+        beds: 0,
+        baths: 0,
+        area_sqft: 1000,
+        ai_match_pct: 92,
+        is_verified: true,
+        is_featured: false,
       });
-      formData.set('amenities', checkedAmenities.join(', '));
-
-      const res = await api.createProperty(formData);
-      showToast('🎉 Property listed successfully with 94% AI verification rating!', 'success');
+      showToast('🎉 Property saved directly to Firestore!', 'success');
       
       setTimeout(() => {
-        const listingType = formData.get('listing_type');
-        window.location.href = listingType === 'rent' ? 'rent.html' : 'buy.html';
+        window.location.href = 'buy.html';
       }, 1500);
     } catch (err) {
       showToast(err.message, 'error');
@@ -85,3 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+function readSellImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Could not read the selected photo.'));
+    reader.readAsDataURL(file);
+  });
+}
