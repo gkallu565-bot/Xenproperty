@@ -186,8 +186,10 @@
       <p style="color:var(--text-muted); margin-bottom:18px;">This form saves directly to the Firestore <strong>properties</strong> collection.</p>
       <form id="adminPropertyForm">
         <div class="form-group">
-          <label for="adminPropImage">Property Photo URL *</label>
-          <input id="adminPropImage" name="image_url" type="url" class="form-control" required placeholder="https://...">
+          <label for="adminPropImage">Property Photo (PNG/JPG/WEBP) *</label>
+          <input id="adminPropImage" name="image" type="file" class="form-control" accept="image/png,image/jpeg,image/webp" aria-label="Property photo file">
+          <input id="adminPropImageUrl" name="image_url" type="url" class="form-control" style="margin-top:8px;" placeholder="Or paste an image URL">
+          <small style="display:block;color:var(--text-muted);margin-top:6px;">Upload a file or paste a URL. File limit: 700 KB.</small>
         </div>
         <div class="form-group">
           <label for="adminPropAddress">Complete Address *</label>

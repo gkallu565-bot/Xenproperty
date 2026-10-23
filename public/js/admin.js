@@ -126,16 +126,30 @@ async function saveAdminProperty(event) {
   const form = event.currentTarget;
   const data = Object.fromEntries(new FormData(form).entries());
   if (!/^\d{6}$/.test(data.pincode)) return showToast('Pincode must be exactly 6 digits.', 'error');
+  const imageFile = form.elements.image?.files?.[0];
+  const imageUrl = String(data.image_url || '').trim();
+  if (!imageFile && !imageUrl) return showToast('Please upload a PNG/JPG/WEBP photo or paste an image URL.', 'error');
+  if (imageFile && imageFile.size > 700 * 1024) return showToast('Photo must be smaller than 700 KB.', 'error');
   try {
+    const storedImage = imageFile ? await readAdminImage(imageFile) : imageUrl;
     await firestoreDirect.create(ADMIN_COLLECTIONS.properties, {
       title: 'New Property Listing', listing_type: 'buy', property_type: 'Apartment', price: Number(data.price),
       price_display: `₹${Number(data.price).toLocaleString('en-IN')}`, city: 'India', state: 'India',
-      address: data.address.trim(), pincode: data.pincode, image_url: data.image_url.trim(), beds: 0, baths: 0,
+      address: data.address.trim(), pincode: data.pincode, image_url: storedImage, beds: 0, baths: 0,
       area_sqft: 1000, ai_match_pct: 92, is_verified: true, is_featured: false,
     });
     form.reset(); closeAdminPropertyForm(); await refreshAdminData();
     showToast('Property saved directly to Firestore.', 'success');
   } catch (error) { showToast(error.message, 'error'); }
+}
+
+function readAdminImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Could not read the selected photo.'));
+    reader.readAsDataURL(file);
+  });
 }
 
 window.openAdminPropertyForm = openAdminPropertyForm;
