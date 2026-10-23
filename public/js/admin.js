@@ -127,11 +127,10 @@ async function saveAdminProperty(event) {
   const data = Object.fromEntries(new FormData(form).entries());
   if (!/^\d{6}$/.test(data.pincode)) return showToast('Pincode must be exactly 6 digits.', 'error');
   const imageFile = form.elements.image?.files?.[0];
-  const imageUrl = String(data.image_url || '').trim();
-  if (!imageFile && !imageUrl) return showToast('Please upload a PNG/JPG/WEBP photo or paste an image URL.', 'error');
+  if (!imageFile) return showToast('Please upload a PNG/JPG/WEBP photo.', 'error');
   if (imageFile && imageFile.size > 700 * 1024) return showToast('Photo must be smaller than 700 KB.', 'error');
   try {
-    const storedImage = imageFile ? await readAdminImage(imageFile) : imageUrl;
+    const storedImage = await readAdminImage(imageFile);
     await firestoreDirect.create(ADMIN_COLLECTIONS.properties, {
       title: 'New Property Listing', listing_type: 'buy', property_type: 'Apartment', price: Number(data.price),
       price_display: `₹${Number(data.price).toLocaleString('en-IN')}`, city: 'India', state: 'India',
