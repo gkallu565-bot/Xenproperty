@@ -60,12 +60,6 @@
         </div>
 
         <div class="form-group">
-          <label>Property Photo *</label>
-          <input type="file" name="image" id="propImageFile" accept="image/jpeg,image/png,image/webp" required class="form-control" aria-label="Upload property photo">
-          <small style="display:block;color:var(--text-muted);margin-top:6px;">Only JPG, PNG ya WEBP • maximum 700 KB</small>
-        </div>
-
-        <div class="form-group">
           <label>Complete Address *</label>
           <textarea name="address" rows="3" placeholder="House/Flat number, road, area, city, state" required class="form-control" aria-label="Complete property address"></textarea>
         </div>
@@ -79,10 +73,6 @@
             <label>Expected Price (₹ in INR) *</label>
             <input type="number" name="price" min="1" step="1" placeholder="e.g. 12500000" required class="form-control" aria-label="Property price">
           </div>
-        </div>
-
-        <div style="margin-bottom:16px;">
-          <img id="imagePreview" src="" alt="Property photo preview" style="display:none; max-height:220px; max-width:100%; border-radius:10px; border:1px solid #d1ded8; margin-top:8px;">
         </div>
 
         <!-- Internal defaults keep the existing API/property cards compatible while
