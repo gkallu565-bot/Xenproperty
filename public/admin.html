@@ -19,7 +19,7 @@
       </a>
       <div class="nav-actions">
         <a href="index.html" class="btn-auth-login"><i class="fa-solid fa-globe"></i> View Website</a>
-        <a href="sell.html" class="btn-list-prop" onclick="goListProperty(event)"><i class="fa-solid fa-plus"></i> Add New Property</a>
+        <button type="button" class="btn-list-prop" onclick="openAdminPropertyForm()"><i class="fa-solid fa-plus"></i> Add New Property</button>
       </div>
     </div>
   </header>
@@ -85,9 +85,9 @@
     <div class="admin-data-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-main);">Active Property Listings</h3>
-        <a href="sell.html" class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;">
+        <button type="button" class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem; border:0; cursor:pointer;" onclick="openAdminPropertyForm()">
           <i class="fa-solid fa-plus"></i> Add Property
-        </a>
+        </button>
       </div>
       <div style="overflow-x:auto;">
         <table class="admin-table">
@@ -178,6 +178,36 @@
     </div>
   </main>
 
+  <!-- Direct Firestore property form -->
+  <div id="adminPropertyModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="adminPropertyTitle">
+    <div class="modal-content" style="max-width:620px;">
+      <button type="button" class="modal-close" onclick="closeAdminPropertyForm()" aria-label="Close">&times;</button>
+      <h2 id="adminPropertyTitle" style="margin-bottom:6px;">Add Property to Firestore</h2>
+      <p style="color:var(--text-muted); margin-bottom:18px;">This form saves directly to the Firestore <strong>properties</strong> collection.</p>
+      <form id="adminPropertyForm">
+        <div class="form-group">
+          <label for="adminPropImage">Property Photo URL *</label>
+          <input id="adminPropImage" name="image_url" type="url" class="form-control" required placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label for="adminPropAddress">Complete Address *</label>
+          <textarea id="adminPropAddress" name="address" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="adminPropPincode">6-digit Pincode *</label>
+            <input id="adminPropPincode" name="pincode" class="form-control" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
+          </div>
+          <div class="form-group">
+            <label for="adminPropPrice">Price (₹) *</label>
+            <input id="adminPropPrice" name="price" type="number" min="1" class="form-control" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-hero-primary" style="border:0; cursor:pointer; width:100%;">Save Directly to Firestore</button>
+      </form>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
@@ -193,6 +223,7 @@
 
   <script src="js/api.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/firestore-direct.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>
