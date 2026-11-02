@@ -22,6 +22,9 @@ function switchAuthTab(tab) {
   const loginSection = document.getElementById('loginSection');
   const signupSection = document.getElementById('signupSection');
 
+  // Manager login has no signup tabs; it can still use demoSignIn safely.
+  if (!loginTabBtn || !signupTabBtn || !loginSection || !signupSection) return;
+
   if (tab === 'login') {
     loginTabBtn.classList.add('active');
     signupTabBtn.classList.remove('active');
