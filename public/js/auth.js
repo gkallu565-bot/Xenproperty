@@ -49,6 +49,8 @@ function destinationAfterAuth(user, fallback = 'profile.html') {
   const requested = new URLSearchParams(window.location.search).get('redirect');
   if (requested && /^[A-Za-z0-9_-]+\.html$/.test(requested)) return requested;
 
+  if (window.location.pathname.endsWith('manager-login.html')) return 'manager.html';
+
   if (user && user.role === 'admin') return 'admin.html';
 
   return fallback;
@@ -160,7 +162,9 @@ async function demoSignIn(email, password, label) {
   try {
     const res = await api.login(email, password);
     showToast(`Signed in as ${res.user.full_name}`, 'success');
-    window.location.href = destinationAfterAuth(res.user, 'index.html');
+    window.location.href = window.location.pathname.endsWith('manager-login.html')
+      ? 'manager.html'
+      : 'index.html';
   } catch (err) {
     showAuthError(err.message);
     btn.disabled = false;

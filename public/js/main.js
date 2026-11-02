@@ -66,7 +66,7 @@ function initAuthUI() {
         <span>${escapeHtml(firstName)}</span>
       </a>
       ${user.role === 'admin'
-        ? '<a href="admin.html" class="user-badge-admin"><i class="fa-solid fa-shield"></i> Admin</a>'
+        ? '<a href="manager.html" class="user-badge-admin"><i class="fa-solid fa-shield"></i> Manager</a>'
         : ''}
       ${listBtnHtml}
     `;

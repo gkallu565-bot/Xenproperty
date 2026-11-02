@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manager Login | XenProperty</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <main class="container" style="padding:70px 24px;">
+    <section style="max-width:480px;margin:auto;background:#fff;border:1px solid #e5ebe7;border-radius:20px;padding:36px;box-shadow:var(--shadow-lg);">
+      <div style="text-align:center;margin-bottom:24px;"><img src="images/logo.png" alt="XenProperty" style="max-width:210px;"><h1 style="font-size:1.5rem;margin-top:20px;">Manager Login</h1><p style="color:var(--text-muted);">Only authorised managers can verify seller properties.</p></div>
+      <form id="loginForm">
+        <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" class="form-control" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" class="form-control" required></div>
+        <button id="loginSubmitBtn" class="btn-submit-primary" type="submit">Sign In as Manager</button>
+      </form>
+      <button type="button" onclick="demoLoginAsAdmin()" style="width:100%;margin-top:14px;padding:11px;border:1px solid #ea580c;border-radius:9px;background:#fff;color:#ea580c;font-weight:700;cursor:pointer;">QA Demo Manager Login</button>
+      <a href="index.html" style="display:block;text-align:center;margin-top:20px;color:var(--primary);">Back to website</a>
+    </section>
+  </main>
+  <script src="js/demo-store.js"></script><script src="js/firestore-direct.js?v=20261102-4"></script><script src="js/api.js"></script><script src="js/main.js?v=20261102-5"></script><script src="js/auth.js?v=20261102-5"></script>
+</body>
+</html>

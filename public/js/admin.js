@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const user = typeof api !== 'undefined' ? api.getCurrentUser() : null;
   if (!user || user.role !== 'admin') {
     showToast('Please sign in with an administrator account to continue.', 'error');
-    setTimeout(() => { window.location.href = 'login.html?redirect=' + encodeURIComponent('admin.html'); }, 900);
+    const loginPage = window.location.pathname.endsWith('manager.html') ? 'manager-login.html' : 'login.html';
+    setTimeout(() => { window.location.href = `${loginPage}?redirect=${encodeURIComponent(window.location.pathname.endsWith('manager.html') ? 'manager.html' : 'admin.html')}`; }, 900);
     return;
   }
   refreshAdminData();
