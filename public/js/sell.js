@@ -3,6 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('listPropertyForm');
   if (!form) return;
 
+  // Listing is a protected seller area. Signed-out visitors may browse the
+  // catalogue, but this page must not be available until they use Login.
+  if (!api.getCurrentUser() || !api.getToken()) {
+    showToast('Please login first. Only logged-in users can list a property.', 'error');
+    setTimeout(() => { window.location.href = 'index.html'; }, 900);
+    return;
+  }
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const currentUser = typeof api !== 'undefined' ? api.getCurrentUser() : null;

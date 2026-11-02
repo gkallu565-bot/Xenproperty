@@ -22,7 +22,7 @@ function requireAuth(target = 'sell.html') {
     window.location.href = target;
     return true;
   }
-  window.location.href = `login.html?redirect=${encodeURIComponent(target)}`;
+  showToast('Please use the Login button before listing a property.', 'error');
   return false;
 }
 

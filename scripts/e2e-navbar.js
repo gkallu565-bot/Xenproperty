@@ -155,13 +155,13 @@ async function cleanupTestAccount(email) {
 
   try {
     /* ------------------------------------------------------------------ */
-    section('1. Signed-out navbar has no auth buttons');
+    section('1. Signed-out navbar has Login and a gated List Property');
 
     await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
     await settle(page);
     const anon = await navState(page);
     check('the navbar auth area exists', !!anon);
-    check('there is no Login button', !anon.hasSignInLink, JSON.stringify(anon.texts));
+    check('there is a Login button', anon.hasSignInLink, JSON.stringify(anon.texts));
     check('there is no Logout button', !anon.hasLogout, JSON.stringify(anon.texts));
     check('there is no "Sign Up" button', !/sign\s*up/i.test(anon.texts.join(' ')), JSON.stringify(anon.texts));
     check('there is no account badge', anon.badge === null, String(anon.badge));
@@ -171,19 +171,19 @@ async function cleanupTestAccount(email) {
     await page.goto(`${BASE}/buy.html`, { waitUntil: 'domcontentloaded' });
     await settle(page);
     const anonBuy = await navState(page);
-    check('buy.html is also free of Login/Sign Up', !anonBuy.hasSignInLink && !anonBuy.hasLogout,
+    check('buy.html shows the Login button', anonBuy.hasSignInLink && !anonBuy.hasLogout,
       JSON.stringify(anonBuy.texts));
 
     /* ------------------------------------------------------------------ */
-    section('2. "List Property" sends you to the login page');
+    section('2. "List Property" requires Login first');
 
-    await Promise.all([
-      page.waitForURL(/login(\.html)?($|[?#])/, { timeout: 15000 }),
-      page.click('.btn-list-prop'),
-    ]);
-    check('clicking "List Property" opens the login page', /login(\.html)?($|[?#])/.test(page.url()), page.url());
-    check('it carries a redirect back to the listing form',
-      /redirect=sell(\.html)?/i.test(page.url()), page.url());
+    const beforeListClick = page.url();
+    await page.click('.btn-list-prop');
+    await page.waitForTimeout(400);
+    check('clicking signed-out List Property does not open listing page', page.url() === beforeListClick, page.url());
+    check('header Login button is available', await page.locator('#navbarAuthArea a[href*="login"]').count() === 1);
+
+    await page.goto(`${BASE}/login.html?redirect=sell.html`, { waitUntil: 'domcontentloaded' });
 
     const tabs = await page.evaluate(() => ({
       login: !!document.getElementById('loginForm'),
@@ -217,7 +217,7 @@ async function cleanupTestAccount(email) {
     const nav1 = await navState(page);
     check('the new name appears in the navbar', nav1?.badge === NEW_USER.full_name, JSON.stringify(nav1));
     check('the badge links to the profile', nav1?.badgeHref === 'profile.html', JSON.stringify(nav1));
-    check('still no Login/Sign Up after registering', !nav1?.hasSignInLink, JSON.stringify(nav1));
+    check('Login button is replaced after registering', !nav1?.hasSignInLink, JSON.stringify(nav1));
     check('still no Logout in the navbar', !nav1?.hasLogout, JSON.stringify(nav1));
 
     /* ------------------------------------------------------------------ */
@@ -273,16 +273,14 @@ async function cleanupTestAccount(email) {
     await wait(1800);
     const after = await navState(page);
     check('the name is gone from the navbar', !!after && after.badge === null, JSON.stringify(after));
-    check('no Login/Sign Up reappeared', !after?.hasSignInLink, JSON.stringify(after));
+    check('the Login button reappeared', !!after?.hasSignInLink, JSON.stringify(after));
     check('"List Property" is back to gating again', !!after?.listBtn, JSON.stringify(after));
 
     // And the gate must work again after signing out.
-    await Promise.all([
-      page.waitForURL(/login(\.html)?($|[?#])/, { timeout: 15000 }),
-      page.click('.btn-list-prop'),
-    ]);
-    check('after logging out, "List Property" goes to login again',
-      /login(\.html)?($|[?#])/.test(page.url()), page.url());
+    const afterLogoutUrl = page.url();
+    await page.click('.btn-list-prop');
+    await wait(400);
+    check('after logging out, List Property remains gated', page.url() === afterLogoutUrl, page.url());
 
     /* ------------------------------------------------------------------ */
     section('7. The 1-click demo login buttons really log in');
