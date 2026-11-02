@@ -52,7 +52,7 @@ function destinationAfterAuth(user, fallback = 'profile.html') {
   const requested = new URLSearchParams(window.location.search).get('redirect');
   if (requested && /^[A-Za-z0-9_-]+\.html$/.test(requested)) return requested;
 
-  if (window.location.pathname.endsWith('manager-login.html')) return 'manager.html';
+  if (/\/manager-login(?:\.html)?$/.test(window.location.pathname)) return 'manager.html';
 
   if (user && user.role === 'admin') return 'admin.html';
 
@@ -165,7 +165,7 @@ async function demoSignIn(email, password, label) {
   try {
     const res = await api.login(email, password);
     showToast(`Signed in as ${res.user.full_name}`, 'success');
-    window.location.href = window.location.pathname.endsWith('manager-login.html')
+    window.location.href = /\/manager-login(?:\.html)?$/.test(window.location.pathname)
       ? 'manager.html'
       : 'index.html';
   } catch (err) {
