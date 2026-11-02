@@ -2,10 +2,44 @@
 let currentSearchTab = 'buy';
 
 document.addEventListener('DOMContentLoaded', () => {
+  initHeroPropertySlider();
   initSearchTabs();
   loadFeaturedProperties();
   initAIChat();
 });
+
+function initHeroPropertySlider() {
+  const hero = document.querySelector('.hero-banner');
+  if (!hero) return;
+  const images = [
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=85',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85',
+    'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=85',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=85',
+    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=85',
+  ];
+  let index = 0;
+  const layer = document.createElement('div');
+  layer.className = 'hero-property-slider';
+  layer.style.backgroundImage = `url("${images[0]}")`;
+  hero.prepend(layer);
+  const dots = document.createElement('div');
+  dots.className = 'hero-slider-dots';
+  images.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button'; dot.className = i === 0 ? 'active' : '';
+    dot.setAttribute('aria-label', `Show property image ${i + 1}`);
+    dot.addEventListener('click', () => { index = i - 1; next(); });
+    dots.appendChild(dot);
+  });
+  hero.appendChild(dots);
+  function next() {
+    index = (index + 1) % images.length;
+    layer.style.backgroundImage = `url("${images[index]}")`;
+    dots.querySelectorAll('button').forEach((dot, i) => dot.classList.toggle('active', i === index));
+  }
+  window.setInterval(next, 5000);
+}
 
 // Search Tab Switcher (Buy | Rent | Commercial)
 function initSearchTabs() {

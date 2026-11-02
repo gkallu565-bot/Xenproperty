@@ -19,6 +19,46 @@
   padding: 48px 48px 70px 48px;
 }
 
+.hero-property-slider {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  animation: heroImageFade .7s ease;
+}
+
+@keyframes heroImageFade {
+  from { opacity: .35; transform: scale(1.015); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.hero-slider-dots {
+  position: absolute;
+  right: 28px;
+  bottom: 22px;
+  z-index: 3;
+  display: flex;
+  gap: 7px;
+}
+
+.hero-slider-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(15, 91, 70, .35);
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.hero-slider-dots button.active {
+  width: 25px;
+  border-radius: 99px;
+  background: var(--primary);
+}
+
 .hero-overlay {
   position: absolute;
   inset: 0;
