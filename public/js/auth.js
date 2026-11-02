@@ -46,10 +46,10 @@ function switchAuthTab(tab) {
  * login form into an open redirect.
  */
 function destinationAfterAuth(user, fallback = 'profile.html') {
-  if (user && user.role === 'admin') return 'admin.html';
-
   const requested = new URLSearchParams(window.location.search).get('redirect');
   if (requested && /^[A-Za-z0-9_-]+\.html$/.test(requested)) return requested;
+
+  if (user && user.role === 'admin') return 'admin.html';
 
   return fallback;
 }
@@ -160,7 +160,7 @@ async function demoSignIn(email, password, label) {
   try {
     const res = await api.login(email, password);
     showToast(`Signed in as ${res.user.full_name}`, 'success');
-    window.location.href = 'index.html';
+    window.location.href = destinationAfterAuth(res.user, 'index.html');
   } catch (err) {
     showAuthError(err.message);
     btn.disabled = false;

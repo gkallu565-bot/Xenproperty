@@ -34,10 +34,8 @@ function goListProperty(event) {
 
 // Sync authentication state with navbar.
 //
-// The navbar deliberately carries no Login / Sign Up / Logout controls. One
-// entry point - "List Property" - sends signed-out visitors to the login page,
-// and once signed in their name takes their place; clicking it opens the
-// profile, which is where logging out lives.
+// Signed-out visitors get an explicit Login button. Listing remains gated by
+// requireAuth, while signed-in visitors see their profile and listing actions.
 function initAuthUI() {
   const user = api.getCurrentUser();
   const authContainer = document.getElementById('navbarAuthArea');
@@ -75,6 +73,9 @@ function initAuthUI() {
   } else {
     authContainer.innerHTML = `
       ${favBtnHtml}
+      <a href="login.html?redirect=sell.html" class="btn-auth-login">
+        <i class="fa-solid fa-right-to-bracket"></i> Login
+      </a>
       ${listBtnHtml}
     `;
   }
@@ -1111,4 +1112,3 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
-

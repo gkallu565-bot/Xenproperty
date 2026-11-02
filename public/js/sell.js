@@ -5,6 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    const currentUser = typeof api !== 'undefined' ? api.getCurrentUser() : null;
+    const token = typeof api !== 'undefined' ? api.getToken() : null;
+    if (!currentUser || !token) {
+      showToast('Please login before listing your property.', 'error');
+      setTimeout(() => { window.location.href = 'login.html?redirect=sell.html'; }, 900);
+      return;
+    }
+
     const pincode = String(form.elements.pincode?.value || '').trim();
     if (!/^\d{6}$/.test(pincode)) {
       showToast('Please enter a valid 6-digit pincode.', 'error');
@@ -16,9 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Firestore...';
     try {
       const data = new FormData(form);
-      const user = typeof api !== 'undefined' ? api.getCurrentUser() : null;
       await firestoreDirect.create('properties', {
-        user_id: user?.id || null,
+        user_id: currentUser.id || null,
         title: 'New Property Listing', listing_type: 'buy', property_type: 'Apartment',
         price: Number(data.get('price')),
         price_display: `₹${Number(data.get('price')).toLocaleString('en-IN')}`,
