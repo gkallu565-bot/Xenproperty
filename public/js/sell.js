@@ -32,16 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Firestore...';
     try {
       const data = new FormData(form);
-      await firestoreDirect.create('properties', {
+      const photoData = await readOptionalMedia(form.elements.photo?.files?.[0]);
+      const videoData = await readOptionalMedia(form.elements.video?.files?.[0]);
+      await firestoreDirect.create('pending_properties', {
         user_id: currentUser.id || null,
         title: 'New Property Listing', listing_type: 'buy', property_type: 'Apartment',
         price: Number(data.get('price')),
         price_display: `₹${Number(data.get('price')).toLocaleString('en-IN')}`,
         city: 'India', state: 'India', address: String(data.get('address') || '').trim(),
-        pincode, image_url: '', beds: 0, baths: 0, area_sqft: 1000,
+        pincode, image_url: '', photo_data: photoData, video_data: videoData, status: 'pending', beds: 0, baths: 0, area_sqft: 1000,
         ai_match_pct: 92, is_verified: true, is_featured: false,
       });
-      showToast('🎉 Address, pincode and price saved directly to Firestore!', 'success');
+       showToast('🎉 Property submitted for manager verification.', 'success');
       setTimeout(() => { window.location.href = 'buy.html'; }, 1500);
     } catch (error) {
       showToast(error.message, 'error');
@@ -50,3 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+function readOptionalMedia(file) {
+  if (!file) return Promise.resolve('');
+  if (file.size > 700 * 1024) return Promise.reject(new Error('Each media file must be smaller than 700 KB in test mode.'));
+  return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || '')); reader.onerror = () => reject(new Error('Could not read media file.')); reader.readAsDataURL(file); });
+}

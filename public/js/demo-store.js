@@ -316,14 +316,21 @@
     /* ---------------------------- properties ----------------------------- */
     async getProperties(params = {}) {
       await ready();
-      const rows = window.xenFilterProperties(allProperties(), params || {});
-      return { success: true, count: rows.length, data: clone(rows) };
+      if (window.firestoreDirect) {
+        const rows = await window.firestoreDirect.list('properties');
+        const filtered = window.xenFilterProperties(rows, params || {});
+        return { success: true, count: filtered.length, data: clone(filtered) };
+      }
+      return { success: true, count: 0, data: [] };
     },
 
     async getFeaturedProperties() {
       await ready();
-      const rows = allProperties().filter((p) => p.is_featured).sort((a, b) => a.id - b.id).slice(0, 6);
-      return { success: true, data: clone(rows) };
+      if (window.firestoreDirect) {
+        const rows = await window.firestoreDirect.list('properties');
+        return { success: true, data: clone(rows.filter((p) => p.is_featured).slice(0, 6)) };
+      }
+      return { success: true, data: [] };
     },
 
     async getPropertyById(id) {

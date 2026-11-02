@@ -5,9 +5,10 @@ const ADMIN_COLLECTIONS = {
   inquiries: 'inquiries',
   loans: 'loan_applications',
   design: 'design_requests',
+  pending: 'pending_properties',
 };
 
-const adminData = { properties: [], users: [], inquiries: [], loans: [], design: [] };
+const adminData = { properties: [], users: [], inquiries: [], loans: [], design: [], pending: [] };
 
 document.addEventListener('DOMContentLoaded', () => {
   const user = typeof api !== 'undefined' ? api.getCurrentUser() : null;
@@ -30,6 +31,7 @@ async function refreshAdminData() {
     await Promise.all(Object.keys(ADMIN_COLLECTIONS).map(loadCollection));
     renderAdminStats();
     renderProperties();
+    renderPending();
     renderInquiries();
     renderLoans();
     renderDesignRequests();
@@ -41,6 +43,31 @@ async function refreshAdminData() {
       if (el) el.innerHTML = `<tr><td colspan="6" style="color:#ef4444;text-align:center;padding:20px;">${escapeHtml(error.message)}</td></tr>`;
     });
   }
+}
+
+function renderPending() {
+  const tbody = document.getElementById('adminPendingTableBody');
+  if (!tbody) return;
+  if (!adminData.pending.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;">No pending submissions</td></tr>'; return; }
+  tbody.innerHTML = adminData.pending.map((p) => `<tr class="filterable-row"><td>#${escapeHtml(String(p.id || ''))}</td><td>${escapeHtml(p.address || '')}</td><td>${escapeHtml(p.pincode || '')}</td><td>₹${Number(p.price || 0).toLocaleString('en-IN')}</td><td>${p.photo_data ? 'Photo' : ''}${p.video_data ? ' + Video' : '—'}</td><td><button onclick="approvePending('${escapeHtml(String(p.id))}')" style="background:#dcfce7;border:0;padding:6px 10px;border-radius:6px;color:#166534;font-weight:700;cursor:pointer;">Approve</button> <button onclick="rejectPending('${escapeHtml(String(p.id))}')" style="background:#fee2e2;border:0;padding:6px 10px;border-radius:6px;color:#991b1b;font-weight:700;cursor:pointer;">Reject</button></td></tr>`).join('');
+}
+
+async function approvePending(id) {
+  const item = adminData.pending.find((p) => String(p.id) === String(id));
+  if (!item) return;
+  try {
+    const { id: _id, status: _status, photo_data, video_data, ...property } = item;
+    property.image_url = photo_data || '';
+    await firestoreDirect.create(ADMIN_COLLECTIONS.properties, property);
+    await firestoreDirect.remove(ADMIN_COLLECTIONS.pending, id);
+    showToast('Property approved and moved to public listings.', 'success');
+    await refreshAdminData();
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function rejectPending(id) {
+  if (!confirm('Reject this seller submission?')) return;
+  try { await firestoreDirect.remove(ADMIN_COLLECTIONS.pending, id); showToast('Submission rejected.', 'success'); await refreshAdminData(); } catch (error) { showToast(error.message, 'error'); }
 }
 
 function renderAdminStats() {
@@ -142,6 +169,8 @@ window.openAdminPropertyForm = openAdminPropertyForm;
 window.closeAdminPropertyForm = closeAdminPropertyForm;
 window.deletePropertyItem = deletePropertyItem;
 window.updateAdminStatus = updateAdminStatus;
+window.approvePending = approvePending;
+window.rejectPending = rejectPending;
 window.filterAdminTables = (query) => {
   const q = String(query || '').toLowerCase();
   document.querySelectorAll('.filterable-row').forEach((row) => { row.style.display = !q || row.innerText.toLowerCase().includes(q) ? '' : 'none'; });

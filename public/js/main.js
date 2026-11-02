@@ -138,6 +138,11 @@ function showAuthError(message) {
 // api.js falls back to an in-browser demo backend. Tell the visitor plainly
 // rather than letting them assume the data is live.
 function initDemoModeNotice() {
+  // Do not expose internal demo-mode wording to public visitors. Demo
+  // credentials may still be used for QA, but catalogue data remains empty
+  // until a manager approves real Firestore submissions.
+  return;
+
   const show = () => {
     if (document.getElementById('demoModeBadge')) return;
     const badge = document.createElement('div');
