@@ -653,18 +653,46 @@
 }
 /* Buy/rent choice on the seller submission form. */
 .listing-kind-btn {
-  border: 1px solid #b9d7cb;
-  background: #fff;
-  color: var(--primary-dark);
-  border-radius: 10px;
-  padding: 11px 18px;
+  flex: 1 1 220px;
+  border: 2px solid transparent;
+  background: transparent;
+  color: #53655e;
+  border-radius: 999px;
+  padding: 13px 20px;
   font-weight: 800;
+  font-size: .92rem;
   cursor: pointer;
   transition: .2s ease;
+}
+.listing-type-toggle {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  padding: 5px;
+  background: #eef4f1;
+  border: 1px solid #d5e4dc;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 3px rgba(15,91,70,.08);
 }
 .listing-kind-btn.active,
 .listing-kind-btn:hover {
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
+  box-shadow: 0 5px 14px rgba(15,91,70,.22);
+}
+.listing-kind-btn:not(.active):hover {
+  color: var(--primary);
+  background: #fff;
+  border-color: #b9d7cb;
+  box-shadow: none;
+}
+.listing-kind-check {
+  display: none;
+  margin-left: 5px;
+}
+.listing-kind-btn.active .listing-kind-check { display: inline-block; }
+@media (max-width: 560px) {
+  .listing-type-toggle { border-radius: 16px; flex-direction: column; }
+  .listing-kind-btn { flex-basis: auto; }
 }

@@ -58,6 +58,7 @@ function selectListingKind(kind) {
   if (input) input.value = kind === 'rent' ? 'rent' : 'buy';
   document.querySelectorAll('.listing-kind-btn').forEach((button) => {
     button.classList.toggle('active', button.dataset.kind === input.value);
+    button.setAttribute('aria-pressed', button.dataset.kind === input.value ? 'true' : 'false');
   });
 }
 
