@@ -335,6 +335,11 @@
 
     async getPropertyById(id) {
       await ready();
+      if (window.firestoreDirect) {
+        const rows = await window.firestoreDirect.list('properties');
+        const direct = rows.find((x) => String(x.id) === String(id));
+        if (direct) return { success: true, data: clone(direct) };
+      }
       const p = allProperties().find((x) => Number(x.id) === Number(id));
       if (!p) throw new Error('Property not found.');
       return { success: true, data: clone(p) };

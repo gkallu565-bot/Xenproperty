@@ -372,6 +372,8 @@ async function viewPropertyDetails(id) {
         </div>
       </div>
 
+      ${p.video_url ? `<div style="margin-bottom:16px;"><video controls preload="metadata" style="width:100%;max-height:360px;border-radius:14px;background:#111;" src="${escapeHtml(p.video_url)}"><track kind="captions"><span>Your browser does not support video playback.</span></video></div>` : ''}
+
       <!-- Action Bar (Share, Print, Compare, Favorite) -->
       <div class="modal-action-bar">
         <button onclick="window.open('https://api.whatsapp.com/send?text=${encodeURIComponent('Check out this verified property on XenProperty: ' + p.title + ' - ' + p.price_display + ' in ' + p.city + ' ' + window.location.origin + '/buy.html?search=' + encodeURIComponent(p.title))}', '_blank')" class="btn-modal-action whatsapp">
