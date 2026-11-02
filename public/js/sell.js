@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const videoData = await readOptionalMedia(form.elements.video?.files?.[0]);
       await firestoreDirect.create('pending_properties', {
         user_id: currentUser.id || null,
-        title: 'New Property Listing', listing_type: 'buy', property_type: 'Apartment',
+        title: 'New Property Listing', listing_type: data.get('listing_type') === 'rent' ? 'rent' : 'buy', property_type: 'Apartment',
         price: Number(data.get('price')),
         price_display: `₹${Number(data.get('price')).toLocaleString('en-IN')}`,
         city: 'India', state: 'India', address: String(data.get('address') || '').trim(),
@@ -52,6 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+function selectListingKind(kind) {
+  const input = document.getElementById('listingType');
+  if (input) input.value = kind === 'rent' ? 'rent' : 'buy';
+  document.querySelectorAll('.listing-kind-btn').forEach((button) => {
+    button.classList.toggle('active', button.dataset.kind === input.value);
+  });
+}
+
+window.selectListingKind = selectListingKind;
 
 function readOptionalMedia(file) {
   if (!file) return Promise.resolve('');

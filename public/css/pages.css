@@ -651,3 +651,20 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* Buy/rent choice on the seller submission form. */
+.listing-kind-btn {
+  border: 1px solid #b9d7cb;
+  background: #fff;
+  color: var(--primary-dark);
+  border-radius: 10px;
+  padding: 11px 18px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s ease;
+}
+.listing-kind-btn.active,
+.listing-kind-btn:hover {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+}
