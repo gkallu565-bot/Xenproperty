@@ -19,7 +19,7 @@
       </a>
       <div class="nav-actions">
         <a href="index.html" class="btn-auth-login"><i class="fa-solid fa-globe"></i> View Website</a>
-        <button type="button" class="btn-list-prop" onclick="openAdminPropertyForm()"><i class="fa-solid fa-plus"></i> Add New Property</button>
+        <a href="sell.html" class="btn-list-prop" onclick="goListProperty(event)"><i class="fa-solid fa-plus"></i> Add New Property</a>
       </div>
     </div>
   </header>
@@ -85,9 +85,9 @@
     <div class="admin-data-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-main);">Active Property Listings</h3>
-        <button type="button" class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem; border:0; cursor:pointer;" onclick="openAdminPropertyForm()">
+        <a href="sell.html" class="btn-hero-primary" style="padding:7px 16px; font-size:0.8rem;" onclick="goListProperty(event)">
           <i class="fa-solid fa-plus"></i> Add Property
-        </button>
+        </a>
       </div>
       <div style="overflow-x:auto;">
         <table class="admin-table">
