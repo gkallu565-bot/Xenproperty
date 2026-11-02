@@ -178,7 +178,7 @@ async function loadProperties() {
       const pJson = JSON.stringify(p).replace(/"/g, '&quot;');
 
       return `
-        <div class="marketplace-card" onclick="viewPropertyDetails(${p.id})">
+        <div class="marketplace-card" onclick="viewPropertyDetails(${JSON.stringify(p.id)})">
           <div class="market-card-img" style="background-image: url('${escapeHtml(p.image_url)}');">
             <span class="badge-verified" style="position:absolute; top:12px; left:12px;">
               <i class="fa-solid fa-circle-check"></i> Verified
@@ -218,7 +218,7 @@ async function loadProperties() {
                 <span style="font-size:0.78rem; font-weight:700; color:var(--primary);">
                   <i class="fa-solid fa-star" style="color:#f59e0b;"></i> ${p.location_score}/10
                 </span>
-                <button class="btn-hero-primary" style="padding:7px 14px; font-size:0.78rem;" onclick="event.stopPropagation(); viewPropertyDetails(${p.id})">
+                <button class="btn-hero-primary" style="padding:7px 14px; font-size:0.78rem;" onclick="event.stopPropagation(); viewPropertyDetails(${JSON.stringify(p.id)})">
                   Details <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
                 </button>
               </div>
