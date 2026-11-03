@@ -6,7 +6,7 @@ let activeFilters = {
   beds: '',
   min_price: '',
   max_price: '',
-  sort: 'is_featured',
+  sort: 'price_asc',
   search: ''
 };
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (urlParams.has('max_price')) activeFilters.max_price = urlParams.get('max_price');
   if (urlParams.has('beds')) activeFilters.beds = urlParams.get('beds');
   if (urlParams.has('search')) activeFilters.search = urlParams.get('search');
-  if (urlParams.has('sort')) activeFilters.sort = urlParams.get('sort');
+  if (urlParams.has('sort') && ['price_asc', 'price_desc'].includes(urlParams.get('sort'))) activeFilters.sort = urlParams.get('sort');
 
   syncFilterUI();
   loadProperties();
@@ -127,7 +127,7 @@ function resetFilters() {
     beds: '',
     min_price: '',
     max_price: '',
-    sort: 'is_featured',
+    sort: 'price_asc',
     search: ''
   };
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
