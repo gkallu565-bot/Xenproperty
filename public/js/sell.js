@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Firestore...';
     try {
       const data = new FormData(form);
-      const photoData = await readOptionalMedia(form.elements.photo?.files?.[0]);
-      const videoData = await readOptionalMedia(form.elements.video?.files?.[0]);
+       const photoUrl = await uploadOptionalMedia(form.elements.photo?.files?.[0], currentUser.id, 'photo');
+       const videoUrl = await uploadOptionalMedia(form.elements.video?.files?.[0], currentUser.id, 'video');
       await firestoreDirect.create('pending_properties', {
         user_id: currentUser.id || null,
         seller_name: currentUser.full_name || '',
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         price: Number(data.get('price')),
         price_display: `₹${Number(data.get('price')).toLocaleString('en-IN')}`,
         city: 'India', state: 'India', address: String(data.get('address') || '').trim(),
-        pincode, image_url: '', photo_data: photoData, video_data: videoData, status: 'pending', beds: 0, baths: 0, area_sqft: 1000,
+         pincode, image_url: photoUrl, video_url: videoUrl, status: 'pending', beds: 0, baths: 0, area_sqft: 1000,
         ai_match_pct: 92, is_verified: true, is_featured: false,
       });
        showToast('🎉 Property submitted for manager verification.', 'success');
@@ -75,8 +75,11 @@ function selectListingKind(kind) {
 
 window.selectListingKind = selectListingKind;
 
-function readOptionalMedia(file) {
-  if (!file) return Promise.resolve('');
-  if (file.size > 700 * 1024) return Promise.reject(new Error('Each media file must be smaller than 700 KB in test mode.'));
-  return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || '')); reader.onerror = () => reject(new Error('Could not read media file.')); reader.readAsDataURL(file); });
+async function uploadOptionalMedia(file, userId, kind) {
+  if (!file) return '';
+  if (!window.firebase?.storage) throw new Error('Firebase Storage is not available. Please enable Storage for this project.');
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const path = `properties/${userId}/${Date.now()}-${kind}-${safeName}`;
+  const snapshot = await firebase.storage().ref(path).put(file, { contentType: file.type || 'application/octet-stream' });
+  return snapshot.ref.getDownloadURL();
 }
