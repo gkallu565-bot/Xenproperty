@@ -44,6 +44,7 @@ function selectAccountType(type) {
   const buyer = document.getElementById('buyerTypeBtn');
   const seller = document.getElementById('sellerTypeBtn');
   if (input) input.value = value;
+  localStorage.setItem('xen_selected_account_type', value);
   if (buyer && seller) {
     buyer.style.background = value === 'buyer' ? '#075743' : 'transparent';
     buyer.style.color = value === 'buyer' ? '#fff' : '#36564d';
@@ -98,7 +99,7 @@ async function handleLogin(e) {
       const user = credential.user;
       const token = await user.getIdToken();
       api.setToken(token);
-      const selectedRole = document.getElementById('accountType')?.value || 'buyer';
+      const selectedRole = document.getElementById('accountType')?.value || localStorage.getItem('xen_selected_account_type') || 'buyer';
       const account = { id: user.uid, full_name: user.displayName || email.split('@')[0], email: user.email, role: selectedRole };
       if (window.firestoreDirect) {
         try { await firestoreDirect.update('users', user.uid, { role: selectedRole }); }
@@ -130,7 +131,7 @@ async function handleRegister(e) {
   const email = emailInput.value.trim();
   const phone = phoneInput.value.trim();
   const password = passwordInput.value;
-  const role = document.getElementById('accountType')?.value === 'seller' ? 'seller' : 'buyer';
+  const role = (document.getElementById('accountType')?.value || localStorage.getItem('xen_selected_account_type')) === 'seller' ? 'seller' : 'buyer';
 
   // Validate before hitting the network so problems are obvious.
   if (!full_name || !email || !phone || !password) {
