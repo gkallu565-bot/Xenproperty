@@ -48,6 +48,15 @@
         </button>
       </div>
 
+      <div style="margin-bottom:22px;">
+        <label style="display:block; margin-bottom:8px; font-weight:700; color:#23443b;">Login as</label>
+        <div style="display:flex; gap:8px; background:#f1f5f3; padding:5px; border-radius:12px;">
+          <button type="button" id="buyerTypeBtn" onclick="selectAccountType('buyer')" style="flex:1; border:0; border-radius:9px; padding:11px 8px; background:#075743; color:#fff; font-weight:700; cursor:pointer;">Buyer / Tenant</button>
+          <button type="button" id="sellerTypeBtn" onclick="selectAccountType('seller')" style="flex:1; border:0; border-radius:9px; padding:11px 8px; background:transparent; color:#36564d; font-weight:700; cursor:pointer;">Seller / Owner</button>
+        </div>
+        <input type="hidden" id="accountType" value="buyer">
+      </div>
+
       <!-- LOGIN FORM -->
       <div id="loginSection">
         <form id="loginForm">

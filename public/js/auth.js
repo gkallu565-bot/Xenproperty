@@ -38,6 +38,20 @@ function switchAuthTab(tab) {
   }
 }
 
+function selectAccountType(type) {
+  const value = type === 'seller' ? 'seller' : 'buyer';
+  const input = document.getElementById('accountType');
+  const buyer = document.getElementById('buyerTypeBtn');
+  const seller = document.getElementById('sellerTypeBtn');
+  if (input) input.value = value;
+  if (buyer && seller) {
+    buyer.style.background = value === 'buyer' ? '#075743' : 'transparent';
+    buyer.style.color = value === 'buyer' ? '#fff' : '#36564d';
+    seller.style.background = value === 'seller' ? '#075743' : 'transparent';
+    seller.style.color = value === 'seller' ? '#fff' : '#36564d';
+  }
+}
+
 /**
  * Where to send someone once they are signed in.
  *
@@ -84,7 +98,7 @@ async function handleLogin(e) {
       const user = credential.user;
       const token = await user.getIdToken();
       api.setToken(token);
-      res = { user: { id: user.uid, full_name: user.displayName || email.split('@')[0], email: user.email, role: 'user' } };
+      res = { user: { id: user.uid, full_name: user.displayName || email.split('@')[0], email: user.email, role: document.getElementById('accountType')?.value || 'buyer' } };
       api.setCurrentUser(res.user);
     } else res = await api.login(email, password);
     showToast(`Welcome back, ${res.user.full_name}!`, 'success');
@@ -105,13 +119,12 @@ async function handleRegister(e) {
   const emailInput = document.getElementById('regEmail');
   const phoneInput = document.getElementById('regPhone');
   const passwordInput = document.getElementById('regPassword');
-  const roleSelect = document.getElementById('regRole');
 
   const full_name = nameInput.value.trim();
   const email = emailInput.value.trim();
   const phone = phoneInput.value.trim();
   const password = passwordInput.value;
-  const role = roleSelect ? roleSelect.value : 'user';
+  const role = document.getElementById('accountType')?.value === 'seller' ? 'seller' : 'buyer';
 
   // Validate before hitting the network so problems are obvious.
   if (!full_name || !email || !phone || !password) {
@@ -141,7 +154,7 @@ async function handleRegister(e) {
       await user.updateProfile({ displayName: full_name });
       const token = await user.getIdToken();
       api.setToken(token);
-      const saved = { id: user.uid, full_name, email: user.email, phone, role: 'user' };
+      const saved = { id: user.uid, full_name, email: user.email, phone, role };
       api.setCurrentUser(saved);
       if (window.firestoreDirect) await firestoreDirect.create('users', saved);
     } else await api.register({ full_name, email, password, phone, role });
