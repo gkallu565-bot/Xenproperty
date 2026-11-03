@@ -8,8 +8,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isManager() {
       return request.auth != null
-        && request.auth.token.email == 'gkallu565@gmail.com'
-        && request.auth.token.email_verified == true;
+        && request.auth.token.email == 'gkallu565@gmail.com';
     }
 
     function isSignedIn() {
