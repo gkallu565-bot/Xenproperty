@@ -65,6 +65,16 @@
     return (body.documents || []).map(documentToObject);
   }
 
+  async function get(collection, id) {
+    return documentToObject(await request(`${ROOT}/${encodeURIComponent(collection)}/${encodeURIComponent(String(id))}`, { method: 'GET' }));
+  }
+
+  async function where(collection, field, value) {
+    const body = { structuredQuery: { from: [{ collectionId: collection }], where: { fieldFilter: { field: { fieldPath: field }, op: 'EQUAL', value: encode(value) } } } };
+    const rows = await request(`${ROOT}:runQuery`, { method: 'POST', body: JSON.stringify(body) });
+    return (Array.isArray(rows) ? rows : []).filter((row) => row.document).map((row) => documentToObject(row.document));
+  }
+
   async function create(collection, data) {
     const id = String(data.id || `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`);
     const clean = { ...data, id: /^\d+$/.test(id) ? Number(id) : id, created_at: data.created_at || new Date().toISOString() };
@@ -83,5 +93,5 @@
     await request(`${ROOT}/${encodeURIComponent(collection)}/${encodeURIComponent(String(id))}`, { method: 'DELETE' });
   }
 
-  window.firestoreDirect = { list, create, update, remove };
+  window.firestoreDirect = { list, get, where, create, update, remove };
 })();

@@ -3,9 +3,12 @@
 //
 // Saved properties live in localStorage (xenFavorites), everything else comes
 // from GET /api/me/dashboard, which is scoped to the signed-in user.
-document.addEventListener('DOMContentLoaded', initProfilePage);
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.firebase?.auth) firebase.auth().onAuthStateChanged((user) => initProfilePage(user));
+  else initProfilePage(null);
+});
 
-async function initProfilePage() {
+async function initProfilePage(firebaseUser = null) {
   const signedOut = document.getElementById('profileSignedOut');
   const signedIn = document.getElementById('profileSignedIn');
 
@@ -13,7 +16,12 @@ async function initProfilePage() {
 
   // The cached session user is only a hint - if there is no token at all there
   // is no point spending a round trip on the API.
-  const session = api.getCurrentUser();
+  const session = api.getCurrentUser() || (firebaseUser ? {
+    id: firebaseUser.uid,
+    full_name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Buyer',
+    email: firebaseUser.email,
+    role: 'buyer',
+  } : null);
   if (!session || !api.getToken()) {
     signedOut.style.display = 'block';
     return;
@@ -21,7 +29,18 @@ async function initProfilePage() {
 
   let data;
   try {
-    data = await api.getMyDashboard();
+    if (firebaseUser && window.firestoreDirect) {
+      const userId = firebaseUser.uid;
+      let user;
+      try { user = await firestoreDirect.get('users', userId); }
+      catch (_) { user = await firestoreDirect.create('users', session); }
+      const readOwn = (collection) => firestoreDirect.where(collection, 'user_id', userId).catch(() => []);
+      const [pending, approved, inquiries, loans, designs] = await Promise.all([
+        readOwn('pending_properties'), readOwn('properties'), readOwn('inquiries'),
+        readOwn('loan_applications'), readOwn('design_requests'),
+      ]);
+      data = { user: { ...session, ...user }, listings: [...pending, ...approved], inquiries, loans, designs };
+    } else data = await api.getMyDashboard();
   } catch (err) {
     // An expired or rejected token means the session is not really valid.
     if (/unauthor|token|expired|authentic|required|login/i.test(err.message || '')) {

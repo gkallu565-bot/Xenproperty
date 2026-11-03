@@ -40,13 +40,16 @@ service cloud.firestore {
       allow delete: if isManager();
     }
     match /inquiries/{id} {
-      allow read, write: if isManager();
+      allow create: if isSignedIn() && request.resource.data.user_id == request.auth.uid;
+      allow read, update, delete: if isManager() || (isSignedIn() && resource.data.user_id == request.auth.uid);
     }
     match /loan_applications/{id} {
-      allow read, write: if isManager();
+      allow create: if isSignedIn() && request.resource.data.user_id == request.auth.uid;
+      allow read, update, delete: if isManager() || (isSignedIn() && resource.data.user_id == request.auth.uid);
     }
     match /design_requests/{id} {
-      allow read, write: if isManager();
+      allow create: if isSignedIn() && request.resource.data.user_id == request.auth.uid;
+      allow read, update, delete: if isManager() || (isSignedIn() && resource.data.user_id == request.auth.uid);
     }
   }
 }
