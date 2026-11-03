@@ -110,8 +110,10 @@ function renderProfile(data) {
     title: p.title,
     meta: `${p.address || p.city || 'India'} • ${p.property_type || 'Property'} • ${capitalise(p.status || 'pending')}`,
     detail: p.price_display || '',
-    action: `onclick="viewPropertyDetails(${Number(p.id)})"`,
-    actionLabel: 'View',
+    action: p.status === 'pending'
+      ? `onclick="deleteMyPendingListing('${escapeHtml(String(p.id))}')"`
+      : '',
+    actionLabel: p.status === 'pending' ? 'Delete Pending' : 'Approved',
   })), {
     icon: 'fa-solid fa-building',
     heading: 'You Have Not Listed Anything Yet',
@@ -163,6 +165,19 @@ function renderProfile(data) {
     cta: ['Design Studio', 'design.html'],
   });
 }
+
+async function deleteMyPendingListing(id) {
+  if (!confirm('Delete your pending property submission?')) return;
+  try {
+    await firestoreDirect.remove('pending_properties', id);
+    showToast('Pending property submission deleted.', 'success');
+    setTimeout(() => window.location.reload(), 500);
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+}
+
+window.deleteMyPendingListing = deleteMyPendingListing;
 
 /**
  * Render a list of rows, or a friendly empty state with a call to action.
