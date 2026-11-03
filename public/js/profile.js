@@ -38,6 +38,24 @@ async function initProfilePage() {
   signedOut.style.display = 'none';
   signedIn.style.display = 'block';
 
+  // The seller dashboard is private: merge only this account's pending and
+  // approved Firestore submissions. Other sellers' records never render here.
+  try {
+    if (window.firestoreDirect) {
+      const [pending, approved] = await Promise.all([
+        firestoreDirect.list('pending_properties'),
+        firestoreDirect.list('properties'),
+      ]);
+      const own = (items) => items.filter((item) => String(item.user_id || '') === String(session.id));
+      data.listings = [...own(pending), ...own(approved)].map((item) => ({
+        ...item,
+        status: item.status || (approved.some((p) => String(p.id) === String(item.id)) ? 'approved' : 'pending'),
+        price_display: item.price_display || `₹${Number(item.price || 0).toLocaleString('en-IN')}`,
+      }));
+    }
+  } catch (error) {
+    console.warn('Could not load private seller listings:', error);
+  }
   renderProfile(data);
   bindProfileActions(data);
 }
@@ -90,7 +108,7 @@ function renderProfile(data) {
   renderList('pfListings', listings.map((p) => ({
     image: p.image_url,
     title: p.title,
-    meta: `${p.city || 'India'} • ${p.property_type || 'Property'}`,
+    meta: `${p.city || 'India'} • ${p.property_type || 'Property'} • ${capitalise(p.status || 'pending')}`,
     detail: p.price_display || '',
     action: `onclick="viewPropertyDetails(${Number(p.id)})"`,
     actionLabel: 'View',
