@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       showToast(error.message, 'error');
       submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Publish Property Listing <i class="fa-solid fa-arrow-right"></i>';
+      submitBtn.innerHTML = 'Submit for Admin Approval <i class="fa-solid fa-paper-plane"></i>';
     }
   });
 });
