@@ -88,6 +88,10 @@ function renderProfile(data) {
   const loans = data.loans || [];
   const designs = data.designs || [];
   const saved = (window.xenFavorites && xenFavorites.items) || [];
+  const isSeller = ['seller', 'agent', 'admin'].includes(String(user.role || '').toLowerCase());
+  document.querySelectorAll('.seller-only').forEach((element) => {
+    element.style.display = isSeller ? '' : 'none';
+  });
 
   // Hero
   setText('pfName', user.full_name || 'Your Profile');
@@ -266,7 +270,15 @@ function bindProfileActions(data) {
     saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
     try {
-      const res = await api.updateMe({ full_name, phone });
+      let res;
+      if (window.firebase?.auth && firebase.auth().currentUser && window.firestoreDirect) {
+        const uid = firebase.auth().currentUser.uid;
+        await firestoreDirect.update('users', uid, { full_name, phone });
+        await firebase.auth().currentUser.updateProfile({ displayName: full_name });
+        const updated = { ...(api.getCurrentUser() || {}), id: uid, full_name, phone };
+        api.setCurrentUser(updated);
+        res = { message: 'Profile updated.' };
+      } else res = await api.updateMe({ full_name, phone });
       closeModal('editProfileModal');
       showToast(res.message || 'Profile updated.', 'success');
 

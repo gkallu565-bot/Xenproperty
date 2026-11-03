@@ -58,6 +58,7 @@ function initAuthUI() {
   if (user) {
     // A record with no name must not throw - fall back to a neutral label.
     const firstName = String(user.full_name || '').split(' ')[0] || 'Profile';
+    const sellerButton = ['seller', 'agent', 'admin'].includes(String(user.role || '').toLowerCase()) ? listBtnHtml : '';
     authContainer.innerHTML = `
       ${favBtnHtml}
       <a href="profile.html" class="user-badge-nav" title="View my full profile"
@@ -65,7 +66,7 @@ function initAuthUI() {
         <i class="fa-solid fa-user-circle"></i>
         <span>${escapeHtml(firstName)}</span>
       </a>
-      ${listBtnHtml}
+      ${sellerButton}
     `;
   } else {
     authContainer.innerHTML = `
