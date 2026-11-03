@@ -108,7 +108,7 @@ function renderProfile(data) {
   renderList('pfListings', listings.map((p) => ({
     image: p.image_url,
     title: p.title,
-    meta: `${p.city || 'India'} • ${p.property_type || 'Property'} • ${capitalise(p.status || 'pending')}`,
+    meta: `${p.address || p.city || 'India'} • ${p.property_type || 'Property'} • ${capitalise(p.status || 'pending')}`,
     detail: p.price_display || '',
     action: `onclick="viewPropertyDetails(${Number(p.id)})"`,
     actionLabel: 'View',
