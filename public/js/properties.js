@@ -153,8 +153,24 @@ async function loadProperties() {
   `;
 
   try {
-    const res = await api.getProperties(activeFilters);
-    const properties = res.data || [];
+    let properties;
+    if (window.firestoreDirect) {
+      const all = await firestoreDirect.list('properties');
+      properties = all
+        .filter((p) => String(p.listing_type || 'buy').toLowerCase() === activeFilters.type)
+        .filter((p) => !activeFilters.search || `${p.title || ''} ${p.address || ''} ${p.city || ''}`.toLowerCase().includes(activeFilters.search.toLowerCase()))
+        .filter((p) => !activeFilters.city || activeFilters.city === 'all' || String(p.city || '').toLowerCase().includes(activeFilters.city.toLowerCase().split(',')[0]))
+        .filter((p) => !activeFilters.property_type || activeFilters.property_type === 'all' || String(p.property_type || '').toLowerCase().includes(activeFilters.property_type.toLowerCase().split(' / ')[0]))
+        .filter((p) => !activeFilters.min_price || Number(p.price || 0) >= Number(activeFilters.min_price))
+        .filter((p) => !activeFilters.max_price || Number(p.price || 0) <= Number(activeFilters.max_price))
+        .map((p) => ({ ...p, price_display: p.price_display || `₹${Number(p.price || 0).toLocaleString('en-IN')}` }));
+      properties.sort((a, b) => activeFilters.sort === 'price_desc'
+        ? Number(b.price || 0) - Number(a.price || 0)
+        : Number(a.price || 0) - Number(b.price || 0));
+    } else {
+      const res = await api.getProperties(activeFilters);
+      properties = res.data || [];
+    }
 
     if (countSpan) {
       countSpan.innerText = `${properties.length} Properties Found`;
