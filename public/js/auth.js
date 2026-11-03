@@ -98,7 +98,13 @@ async function handleLogin(e) {
       const user = credential.user;
       const token = await user.getIdToken();
       api.setToken(token);
-      res = { user: { id: user.uid, full_name: user.displayName || email.split('@')[0], email: user.email, role: document.getElementById('accountType')?.value || 'buyer' } };
+      const selectedRole = document.getElementById('accountType')?.value || 'buyer';
+      const account = { id: user.uid, full_name: user.displayName || email.split('@')[0], email: user.email, role: selectedRole };
+      if (window.firestoreDirect) {
+        try { await firestoreDirect.update('users', user.uid, { role: selectedRole }); }
+        catch (_) { try { await firestoreDirect.create('users', account); } catch (__) { /* profile will retry */ } }
+      }
+      res = { user: account };
       api.setCurrentUser(res.user);
     } else res = await api.login(email, password);
     showToast(`Welcome back, ${res.user.full_name}!`, 'success');
