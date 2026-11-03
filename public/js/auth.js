@@ -78,7 +78,15 @@ async function handleLogin(e) {
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
 
   try {
-    const res = await api.login(email, password);
+    let res;
+    if (window.firebase?.auth) {
+      const credential = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const user = credential.user;
+      const token = await user.getIdToken();
+      api.setToken(token);
+      res = { user: { id: user.uid, full_name: user.displayName || email.split('@')[0], email: user.email, role: 'user' } };
+      api.setCurrentUser(res.user);
+    } else res = await api.login(email, password);
     showToast(`Welcome back, ${res.user.full_name}!`, 'success');
     window.location.href = destinationAfterAuth(res.user);
   } catch (err) {
@@ -127,7 +135,16 @@ async function handleRegister(e) {
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
 
   try {
-    await api.register({ full_name, email, password, phone, role });
+    if (window.firebase?.auth) {
+      const credential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const user = credential.user;
+      await user.updateProfile({ displayName: full_name });
+      const token = await user.getIdToken();
+      api.setToken(token);
+      const saved = { id: user.uid, full_name, email: user.email, phone, role: 'user' };
+      api.setCurrentUser(saved);
+      if (window.firestoreDirect) await firestoreDirect.create('users', saved);
+    } else await api.register({ full_name, email, password, phone, role });
     showToast('Account created successfully! Redirecting...', 'success');
     window.location.href = destinationAfterAuth(api.getCurrentUser());
   } catch (err) {

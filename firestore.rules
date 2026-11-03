@@ -12,6 +12,10 @@ service cloud.firestore {
         && request.auth.token.email_verified == true;
     }
 
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
     // Public catalogue is readable, but only the authenticated manager can
     // publish or remove a live property.
     match /properties/{propertyId} {
@@ -22,12 +26,18 @@ service cloud.firestore {
     // Sellers may submit a review request. Only the manager can inspect,
     // approve, reject, or delete pending records.
     match /pending_properties/{propertyId} {
-      allow create: if true;
-      allow read, update, delete: if isManager();
+      allow create: if isSignedIn()
+        && request.resource.data.user_id == request.auth.uid;
+      allow read: if isManager()
+        || (isSignedIn() && resource.data.user_id == request.auth.uid);
+      allow update, delete: if isManager()
+        || (isSignedIn() && resource.data.user_id == request.auth.uid && resource.data.status == 'pending');
     }
 
     match /users/{userId} {
-      allow read, write: if isManager();
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow read, update: if isManager() || (isSignedIn() && request.auth.uid == userId);
+      allow delete: if isManager();
     }
     match /inquiries/{id} {
       allow read, write: if isManager();

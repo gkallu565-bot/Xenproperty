@@ -47,7 +47,12 @@
   }
 
   async function request(url, options) {
-    const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...(options && options.headers) } });
+    const authHeaders = {};
+    if (window.firebase?.auth) {
+      const user = firebase.auth().currentUser;
+      if (user) authHeaders.Authorization = `Bearer ${await user.getIdToken()}`;
+    }
+    const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...authHeaders, ...(options && options.headers) } });
     const text = await response.text();
     let body = {};
     try { body = text ? JSON.parse(text) : {}; } catch (_) { /* handled below */ }
