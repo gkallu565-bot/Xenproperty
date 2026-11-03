@@ -6,9 +6,37 @@ rules_version = '2';
 // Firestore, it only calls /api/*.
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      // TEMPORARY TEST MODE ONLY. Lock this down before production.
-      allow read, write: if true;
+    function isManager() {
+      return request.auth != null
+        && request.auth.token.email == 'gkallu565@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    // Public catalogue is readable, but only the authenticated manager can
+    // publish or remove a live property.
+    match /properties/{propertyId} {
+      allow read: if true;
+      allow write: if isManager();
+    }
+
+    // Sellers may submit a review request. Only the manager can inspect,
+    // approve, reject, or delete pending records.
+    match /pending_properties/{propertyId} {
+      allow create: if true;
+      allow read, update, delete: if isManager();
+    }
+
+    match /users/{userId} {
+      allow read, write: if isManager();
+    }
+    match /inquiries/{id} {
+      allow read, write: if isManager();
+    }
+    match /loan_applications/{id} {
+      allow read, write: if isManager();
+    }
+    match /design_requests/{id} {
+      allow read, write: if isManager();
     }
   }
 }
