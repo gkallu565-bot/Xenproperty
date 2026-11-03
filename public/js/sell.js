@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const videoData = await readOptionalMedia(form.elements.video?.files?.[0]);
       await firestoreDirect.create('pending_properties', {
         user_id: currentUser.id || null,
+        seller_name: currentUser.full_name || '',
+        seller_email: currentUser.email || '',
+        seller_phone: currentUser.phone || '',
         title: 'New Property Listing', listing_type: data.get('listing_type') === 'rent' ? 'rent' : 'buy', property_type: 'Apartment',
         price: Number(data.get('price')),
         price_display: `₹${Number(data.get('price')).toLocaleString('en-IN')}`,
