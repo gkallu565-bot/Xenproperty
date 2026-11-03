@@ -40,6 +40,10 @@ function initAuthUI() {
   const user = api.getCurrentUser();
   const authContainer = document.getElementById('navbarAuthArea');
   if (!authContainer) return;
+  const isSeller = user && ['seller', 'agent', 'admin'].includes(String(user.role || '').toLowerCase());
+  document.querySelectorAll('.nav-link').forEach((link) => {
+    if (link.textContent.trim() === 'Sell') link.closest('li').style.display = user && !isSeller ? 'none' : '';
+  });
 
   const favBtnHtml = `
     <button onclick="xenFavorites.openDrawer()" class="btn-nav-favorites" title="View Saved Properties">
@@ -58,7 +62,7 @@ function initAuthUI() {
   if (user) {
     // A record with no name must not throw - fall back to a neutral label.
     const firstName = String(user.full_name || '').split(' ')[0] || 'Profile';
-    const sellerButton = ['seller', 'agent', 'admin'].includes(String(user.role || '').toLowerCase()) ? listBtnHtml : '';
+    const sellerButton = isSeller ? listBtnHtml : '';
     authContainer.innerHTML = `
       ${favBtnHtml}
       <a href="profile.html" class="user-badge-nav" title="View my full profile"

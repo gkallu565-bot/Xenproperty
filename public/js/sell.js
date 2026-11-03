@@ -5,9 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listing is a protected seller area. Signed-out visitors may browse the
   // catalogue, but this page must not be available until they use Login.
-  if (!api.getCurrentUser() || !api.getToken()) {
+  const sessionUser = api.getCurrentUser();
+  const canList = sessionUser && ['seller', 'agent', 'admin'].includes(String(sessionUser.role || '').toLowerCase());
+  if (!sessionUser || !api.getToken()) {
     showToast('Please login first. Only logged-in users can list a property.', 'error');
-    setTimeout(() => { window.location.href = 'index.html'; }, 900);
+    setTimeout(() => { window.location.href = 'login.html?redirect=sell.html'; }, 900);
+    return;
+  }
+  if (!canList) {
+    showToast('Only Seller / Owner accounts can list a property.', 'error');
+    form.innerHTML = '<div style="padding:28px;text-align:center;color:#36564d;font-weight:700;">Property listing is available only for Seller / Owner accounts.<br><a href="profile.html" style="display:inline-block;margin-top:14px;color:#075743;">Go to my profile</a></div>';
+    setTimeout(() => { window.location.href = 'profile.html'; }, 1800);
     return;
   }
 
@@ -15,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
     const currentUser = typeof api !== 'undefined' ? api.getCurrentUser() : null;
     const token = typeof api !== 'undefined' ? api.getToken() : null;
-    if (!currentUser || !token) {
+    if (!currentUser || !token || !['seller', 'agent', 'admin'].includes(String(currentUser.role || '').toLowerCase())) {
       showToast('Please login before listing your property.', 'error');
       setTimeout(() => { window.location.href = 'login.html?redirect=sell.html'; }, 900);
       return;
