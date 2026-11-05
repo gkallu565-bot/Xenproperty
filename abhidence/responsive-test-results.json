@@ -1,0 +1,90 @@
+{
+  "testedAt": "2026-11-05T15:04:00.701Z",
+  "results": [
+    {
+      "name": "home-mobile-375",
+      "path": "/",
+      "width": 375,
+      "height": 812,
+      "mobile": true,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "scrollWidth": 375,
+      "overflow": false,
+      "headerHeight": 64.80000305175781
+    },
+    {
+      "name": "home-tablet-768",
+      "path": "/",
+      "width": 768,
+      "height": 900,
+      "mobile": true,
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "scrollWidth": 768,
+      "overflow": false,
+      "headerHeight": 64.80000305175781
+    },
+    {
+      "name": "home-laptop-1024",
+      "path": "/",
+      "width": 1024,
+      "height": 900,
+      "mobile": false,
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "scrollWidth": 1009,
+      "overflow": false,
+      "headerHeight": 74.80000305175781
+    },
+    {
+      "name": "buy-mobile-375",
+      "path": "/buy",
+      "width": 375,
+      "height": 812,
+      "mobile": true,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "scrollWidth": 375,
+      "overflow": false,
+      "headerHeight": 64.80000305175781
+    },
+    {
+      "name": "login-mobile-375",
+      "path": "/login",
+      "width": 375,
+      "height": 812,
+      "mobile": true,
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "scrollWidth": 375,
+      "overflow": false,
+      "headerHeight": 64.80000305175781
+    },
+    {
+      "name": "seller-header-mobile-390",
+      "path": "/",
+      "width": 390,
+      "height": 812,
+      "mobile": true,
+      "seller": true,
+      "viewport": {
+        "width": 390,
+        "height": 812
+      },
+      "scrollWidth": 390,
+      "overflow": false,
+      "headerHeight": 64.80000305175781
+    }
+  ]
+}
