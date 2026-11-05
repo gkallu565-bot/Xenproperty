@@ -421,7 +421,7 @@ button, input, select, textarea {
   }
 
   .nav-mobile-panel {
-    display: block;
+    display: none;
     position: absolute;
     top: 74px;
     left: 0;
@@ -454,6 +454,10 @@ button, input, select, textarea {
     padding: 14px 24px;
     font-size: 0.95rem;
     min-height: 46px;
+  }
+
+  .nav-mobile-panel.open {
+    display: block;
   }
 
   .nav-dropdown-menu {
