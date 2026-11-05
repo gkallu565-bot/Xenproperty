@@ -628,9 +628,9 @@ button, input, select, textarea {
   }
 
   .nav-actions .btn-list-prop {
-    width: 62px;
-    min-width: 62px;
-    font-size: .67rem;
+    width: 74px;
+    min-width: 74px;
+    font-size: .65rem;
     line-height: 1.05;
     white-space: normal;
     text-align: center;
