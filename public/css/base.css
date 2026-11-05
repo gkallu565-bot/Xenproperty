@@ -591,16 +591,16 @@ button, input, select, textarea {
   }
 
   .nav-actions .btn-nav-favorites {
-    width: 58px;
-    min-width: 58px;
+    width: 42px;
+    min-width: 42px;
     gap: 3px;
-    font-size: .76rem;
+    padding: 7px;
+    font-size: 0;
     white-space: nowrap;
   }
 
   .nav-actions .nav-fav-text {
-    display: inline;
-    font-size: .68rem;
+    display: none;
   }
 
   .nav-actions .user-badge-nav {
