@@ -271,6 +271,11 @@ function initMobileMenu() {
     navLinks.parentElement.insertBefore(panel, navLinks);
     panel.appendChild(navLinks);
   }
+  // Keep auth actions in the header row, even if an older cached layout had
+  // placed them inside the mobile navigation panel.
+  if (authArea && authArea.parentElement === panel) {
+    toggleBtn.closest('.nav-container')?.appendChild(authArea);
+  }
   if (!panel) return;
 
   const close = () => {

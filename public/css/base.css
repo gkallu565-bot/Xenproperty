@@ -569,15 +569,19 @@ button, input, select, textarea {
   }
 
   /* Keep Saved, Login/Profile and List Property in the header row. */
-  .nav-container > .nav-actions {
+  .nav-actions,
+  .nav-container > .nav-actions,
+  .nav-mobile-panel .nav-actions {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
     gap: 4px;
     margin-left: auto;
+    padding: 0;
+    width: auto;
   }
 
-  .nav-container > .nav-actions > * {
+  .nav-actions > * {
     min-height: 40px;
     width: 42px;
     min-width: 42px;
@@ -586,18 +590,18 @@ button, input, select, textarea {
     justify-content: center;
   }
 
-  .nav-container > .nav-actions .nav-fav-text,
-  .nav-container > .nav-actions .user-badge-nav span {
+  .nav-actions .nav-fav-text,
+  .nav-actions .user-badge-nav span {
     display: none;
   }
 
-  .nav-container > .nav-actions .btn-auth-login,
-  .nav-container > .nav-actions .btn-list-prop {
+  .nav-actions .btn-auth-login,
+  .nav-actions .btn-list-prop {
     font-size: 0;
   }
 
-  .nav-container > .nav-actions .btn-auth-login i,
-  .nav-container > .nav-actions .btn-list-prop i {
+  .nav-actions .btn-auth-login i,
+  .nav-actions .btn-list-prop i {
     font-size: 1rem;
     margin: 0;
   }
