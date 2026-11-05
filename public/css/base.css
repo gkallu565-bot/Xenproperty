@@ -649,7 +649,7 @@ button, input, select, textarea {
   .nav-container > .brand-logo { min-width: 0; flex: 1 1 auto; }
   .nav-container > .brand-logo-img { max-width: 100%; }
 
-  @media (max-width: 360px) {
+  @media (max-width: 340px) {
     .nav-actions .nav-fav-text,
     .nav-actions .user-badge-nav span,
     .nav-actions .btn-auth-login,
