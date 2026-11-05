@@ -488,6 +488,7 @@ button, input, select, textarea {
 
   .nav-actions {
     gap: 8px;
+    margin-left: auto;
   }
 
   .nav-fav-text {
@@ -510,6 +511,7 @@ button, input, select, textarea {
 @media (max-width: 768px) {
   .nav-container {
     height: 64px;
+    gap: 6px;
   }
 
   .brand-logo-img {
@@ -564,6 +566,40 @@ button, input, select, textarea {
     gap: 10px;
     padding: 14px 22px 18px;
     width: 100%;
+  }
+
+  /* Keep Saved, Login/Profile and List Property in the header row. */
+  .nav-container > .nav-actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+  .nav-container > .nav-actions > * {
+    min-height: 40px;
+    width: 42px;
+    min-width: 42px;
+    padding: 8px;
+    border-radius: 999px;
+    justify-content: center;
+  }
+
+  .nav-container > .nav-actions .nav-fav-text,
+  .nav-container > .nav-actions .user-badge-nav span {
+    display: none;
+  }
+
+  .nav-container > .nav-actions .btn-auth-login,
+  .nav-container > .nav-actions .btn-list-prop {
+    font-size: 0;
+  }
+
+  .nav-container > .nav-actions .btn-auth-login i,
+  .nav-container > .nav-actions .btn-list-prop i {
+    font-size: 1rem;
+    margin: 0;
   }
 
   .nav-mobile-panel .nav-actions > * {

@@ -270,7 +270,6 @@ function initMobileMenu() {
     panel.className = 'nav-mobile-panel';
     navLinks.parentElement.insertBefore(panel, navLinks);
     panel.appendChild(navLinks);
-    if (authArea) panel.appendChild(authArea);
   }
   if (!panel) return;
 
