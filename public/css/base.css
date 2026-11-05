@@ -696,8 +696,24 @@ button, input, select, textarea {
 }
 
 @media (max-width: 400px) {
+  .nav-container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .nav-container > .brand-logo {
+    flex: 0 1 102px;
+    max-width: 102px;
+  }
+
+  .nav-container > .brand-logo .brand-logo-img {
+    width: 102px;
+    max-width: 102px;
+    height: auto;
+  }
+
   .brand-logo-img {
-    max-width: 128px;
+    max-width: 102px;
   }
 
   .nav-mobile-panel .nav-actions .btn-auth-signup,
